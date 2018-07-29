@@ -1,0 +1,136 @@
+{% extends "../app_base.html" %}
+
+{% block content %}
+{% load humanize currency %}
+<form action="#" method="post" novalidate>
+{% csrf_token %}
+<div class="hero is-medium">
+    <div class="hero-body">
+        <div class="container">
+            <h2 class="title">Checkout</h2>
+            {% if form.errors %}
+                <div class="notification is-danger">
+                    There are some errors in your form. Please correct them and proceed
+                </div>
+            {% endif %}
+            <div class="columns">
+                <div class="column">
+                    {{ form.non_field_errors }}
+                    <div class="field">
+                        <h4 class="title is-6">Contact details</h4>
+                    </div>
+                    <div class="field is-grouped">
+                        <div class="control is-expanded">
+                            {{ form.first_name }}
+                            {% if form.first_name.errors %}
+                                <span class="help is-danger">{{ form.first_name.errors }}</span>
+                            {% endif %}
+                        </div>
+                        <div class="control is-expanded">
+                            {{ form.last_name }}
+                            {% if form.last_name.errors %}
+                                <span class="help is-danger">{{ form.last_name.errors }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        {{ form.email }}
+                        {% if form.email.errors %}
+                            <span class="help is-danger">{{ form.email.errors }}</span>
+                        {% endif %}
+                    </div>
+                    <div class="field">
+                        {{ form.phone }}
+                        {% if form.phone.errors %}
+                            <span class="help is-danger">{{ form.phone.errors }}</span>
+                        {% endif %}
+                    </div>
+                    <hr>
+                    <!-- Shipping Address -->
+                    <div class="field">
+                        <h4 class="title is-6">Ship to (We only ship within Nigeria)</h4>
+                    </div>
+                    <div class="field">
+                        {{ form.street }}
+                        {% if form.street.errors %}
+                            <span class="help is-danger">{{ form.street.errors }}</span>
+                        {% endif %}
+                    </div>
+                    <div class="field is-grouped">
+                        <div class="control is-expanded">
+                            {{ form.city }}
+                            {% if form.city.errors %}
+                                <span class="help is-danger">{{ form.city.errors }}</span>
+                            {% endif %}
+                        </div>
+                        <div class="control is-expanded">
+                            <div class="select is-fullwidth">
+                                {{ form.state }}
+                            </div>
+                            {% if form.state.errors %}
+                                <span class="help is-danger">{{ form.state.errors }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% if shipping_address.count > 0 %}
+                        <h4 class="title is-6">Ship to a previous address</h4>
+                        {% for address in shipping_address %}
+                            <div class="notification is-light">
+                                {{ address.street }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    <hr>
+                    <!-- Gift check  -->
+                    <div class="field">
+                        <label>
+                            {{ form.is_gift }} {{ form.is_gift.label }}
+                        </label>
+                    </div>
+                    <hr>
+                    <!-- Additional Notes -->
+                    <div class="field">
+                        {{ form.additional_notes }}
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="box">
+                        <h4 class="title is-4">My Cart</h4>
+                        <table class="table is-fullwidth is-borderless-table">
+                            <thead>
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Qty</th>
+                                    <th>Cost</th>
+                                </tr>
+                            </thead>
+                            {% for item in cart %}
+                                <tr>
+                                    <td>{{ item.product.title }}</td>
+                                    <td>{{ item.quantity }}</td>
+                                    <td class="has-text-right">{{ item.product.sale_price|intcomma|currency }}</td>
+                                </tr>
+                            {% endfor %}
+                            <tr>
+                                <td colspan="2">Shipping</td>
+                                <td class="has-text-right">0.00</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" align="right"><b>Total</b></td>
+                                <td class="has-text-right">{{ total|intcomma|currency }}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">
+                                    <button type="submit" name="submit" class="button is-primary is-fullwidth is-medium">Buy now</button>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</form>
+{% endblock content %}

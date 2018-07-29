@@ -1,0 +1,41 @@
+{% extends '../app_base.html' %}
+
+{% block content %}
+{% load humanize %}
+<div class="hero is-medium">
+    <div class="hero-body">
+        <div class="container">
+            <div class="columns is-centered">
+                <div class="column box is-6">
+                    <form action="{% url 'microstore:delete_product' product.id %}" method="post">
+                        <h4 class="title is-5">Are you sure you want to delete <u>{{ product.title }}</u>?</h4>
+                        <p class="has-text-danger">This action cannot be undone</p>
+                        <table class="table is-borderless">
+                            <tr>
+                                <td>
+                                    <figure class="image is-128x128">
+                                        <img src="{% with product.images.all|first as image %}{{ image.image_url }}{% endwith %}" alt="{{ product.title }}">
+                                    </figure>
+                                </td>
+                                <td>
+                                    <h4 class="title is-6">
+                                        <a href="#">{{ product.title }}</a>
+                                    </h4>
+                                    <p>{{ product.sale_price|intcomma }}</p>
+                                </td>
+                            </tr>
+                        </table>
+                        <p>
+                            {% csrf_token %}
+                            <input type="hidden" name="product_id" value="{{ product.id }}">
+                            <button type="submit" class="button is-danger">Delete</button>
+                            <a href="{{ request.META.HTTP_REFERER }}" class="button is-white">Cancel</a>
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

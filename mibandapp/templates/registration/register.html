@@ -1,0 +1,58 @@
+{% extends './account_base.html' %}
+
+{% block content %}
+
+    <div class="columns is-centered">
+        <div class="column is-4">
+            <form class="form box" action="{% url 'register' %}" method="post">
+                {% csrf_token %}
+
+                <div class="field">
+                    {{ form.email }}
+                    <p class="help is-light">{{ form.email.help_text }}</p>
+                </div>
+                <div class="field">
+                    {{ form.password1 }}
+                    <p class="help is-light">{{ form.password1.help_text }}</p>
+                    {% if form.password1.errors %}
+                        <span class="help is-danger">{{ form.password1.errors }}</span>
+                    {% endif %}
+                </div>
+                <div class="field">
+                    {{ form.password2 }}
+                    <p class="help is-light">{{ form.password2.help_text }}</p>
+                    {% if form.password2.errors %}
+                        <span class="help is-danger">{{ form.password2.errors }}</span>
+                    {% endif %}
+                </div>
+                <hr>
+                <div class="field">
+                    {{ form.first_name }}
+                    <p class="help is-light">{{ form.first_name.help_text }}</p>
+                    {% if form.first_name.errors %}
+                        <span class="help is-danger">{{ form.first_name.errors }}</span>
+                    {% endif %}
+                </div>
+                <div class="field">
+                    {{ form.last_name }}
+                    <p class="help is-light">{{ form.last_name.help_text }}</p>
+                    {% if form.last_name.errors %}
+                        <span class="help is-danger">{{ form.last_name.errors }}</span>
+                    {% endif %}
+                </div>
+                <div class="field">
+                    <input type="hidden" name="next" value="{{ next }}">
+                    <button type="submit" name="submit" class="button is-fullwidth is-info">Sign up</button>
+                </div>
+                <p class="field has-text-centered">
+                    <a href="#" class="help">Forgot password</a>
+                </p>
+                <hr>
+                <div class="field">
+                    <p>Already have an account? <b><a href="{% url "login" %}?next={{ request.GET.next }}">Login here</a></b></p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock content %}

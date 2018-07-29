@@ -1,0 +1,162 @@
+{% extends '../app_base.html' %}
+
+{% block content %}
+
+<div class="hero is-medium">
+    <div class="hero-body">
+        <div class="container">
+            <div class="columns is-centered">
+                <div class="column is-8">
+                    <div class="box">
+                        <form action="{% url 'microstore:edit_product' id=product.id %}" method="post" enctype="multipart/form-data" novalidate>
+                            {% csrf_token %}
+                            {{ form.non_field_errors }}
+                            <div class="field">
+                                <label>{{ form.title.label }}</label>
+                                {{ form.title }}
+                                {% if form.title.errors %}
+                                    <span class="help is-danger">{{ form.title.errors }}</span>
+                                {% endif %}
+                            </div>
+                            <div class="field">
+                                <label>{{ form.description.label }}</label>
+                                {{ form.description }}
+                                {% if form.description.errors %}
+                                    <span class="help is-danger">{{ form.description.errors }}</span>
+                                {% endif %}
+                            </div>
+                            <div class="field is-grouped">
+                                <div class="control is-expanded">
+                                    <label>{{ form.regular_price.label }}</label>
+                                    {{ form.regular_price }}
+                                    {% if form.regular_price.errors %}
+                                        <span class="help is-danger">{{ form.regular_price.errors }}</span>
+                                    {% endif %}
+                                </div>
+                                <div class="control is-expanded">
+                                    <label>{{ form.sale_price.label }}</label>
+                                    {{ form.sale_price }}
+                                    {% if form.sale_price.errors %}
+                                        <span class="help is-danger">{{ form.sale_price.errors }}</span>
+                                    {% endif %}
+                                </div>
+                                <div class="control is-expanded">
+                                    <label>{{ form.quantity.label }}</label>
+                                    {{ form.quantity }}
+                                    {% if form.quantity.errors %}
+                                        <span class="help is-danger">{{ form.quantity.errors }}</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="field is-grouped">
+                                <div class="control is-expanded">
+                                    <label>Select brand</label>
+                                    <div class="select is-fullwidth">
+                                        {{ form.brand }}
+                                    </div>
+                                </div>
+                                <div class="control is-expanded">
+                                    <label>Select Category</label>
+                                    <div class="select is-fullwidth">
+                                        {{ form.category }}
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <h4 class="title is-5">Upload Product Images</h4>
+                            <div class="card">
+                                <div class="card-content">
+                                    {{ images.management_form }}
+                                    {% for image in images %}
+                                        {{ image.id }}
+                                        <div class="field">
+                                            <div class="file">
+                                                {{ image.image }}
+                                            </div>
+                                            <p>
+                                                <label>
+                                                    {{ image.is_banner }} Use as store image main
+                                                </label>
+
+                                                <label>
+                                                    {{ image.is_display }} Use as background image
+                                                </label>
+                                                <label>
+                                                    {% if images.can_delete %}
+                                                        {{ image.DELETE }} Delete
+                                                    {% endif %}
+                                                </label>
+                                            </p>
+                                        </div>
+                                        <hr>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="level">
+                                <div class="level-left">
+                                    <div class="level-item"><h4 class="title is-5">Features</h4></div>
+                                    <div class="level-item"><a href="#" class="button is-info is-small" id="add_feature">+</a></div>
+                                </div>
+                                <div class="level-right">
+
+                                </div>
+                            </div>
+
+                            {{ features.management_form }}
+                            {% if features.errors %}
+                                <ul class="errors">
+                                    {% for error in features.error %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                            {% for feature in features %}
+                                {{ feature.id }}
+                                <div class="field is-grouped">
+                                    <div class="control">
+                                        <div class="select">
+                                            {{ feature.feature }}
+                                        </div>
+                                    </div>
+                                    <div class="control">
+                                        {{ feature.description }}
+                                    </div>
+                                    {% if features.can_delete %}
+                                        <div class="control">
+                                            <div class="checkbox"><label>
+                                                {{ feature.DELETE }} Delete
+                                            </label></div>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+
+                            <hr>
+                            <h4 class="title is-5">Product Features Details</h4>
+                            {{ details.management_form }}
+                            {% if details.errors %}
+                                <ul class="errors">
+                                    {% for error in details.error %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                            {% for detail in details %}
+                                <div class="field">
+                                    {{ detail.as_p }}
+                                </div>
+                                <hr>
+                            {% endfor %}
+                            <div class="field">
+                                <button type="submit" class="button is-primary">Update Product</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

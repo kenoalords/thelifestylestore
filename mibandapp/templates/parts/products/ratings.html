@@ -1,0 +1,15 @@
+{% load static %}
+<div class="rating">
+    <form action="{% url 'microstore:like_product' id=product.id %}" method="post" class="rating-form">
+        {% csrf_token %}
+        <input type="hidden" name="product_id" value="{{ product.id }}" class="product_id">
+        <button type="submit" class="button is-white">
+            <div class="icon">
+                <img src="{% static 'images/heart-solid.svg' %}" alt="Rating">
+            </div>
+        </button>
+        <div class="text">
+            <span class="count">{{ product.like_count }}</span> people like this product
+        </div>
+    </form>
+</div>

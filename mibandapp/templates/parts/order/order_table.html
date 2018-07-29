@@ -1,0 +1,54 @@
+
+{% load humanize static %}
+<table class="table is-striped is-fullwidth order-table is-hoverable">
+    <thead>
+        <tr>
+            <th></th>
+            <th></th>
+            <th>Name & Address</th>
+            <th>Total</th>
+            <th>Notes</th>
+            <th>Date</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for order in orders %}
+            <tr>
+                <td>
+                    {% if order.is_paid %}
+                        <figure class="image is-16x16">
+                            <img src="{% static 'images/dollar-sign-solid.svg' %}" alt="Paid">
+                        </figure>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if order.is_gift %}
+                        <figure class="image is-16x16">
+                            <img src="{% static 'images/gift-solid.svg' %}" alt="Gift">
+                        </figure>
+                    {% endif %}
+                </td>
+                <td>
+                    <div>
+                        <a href="{% url 'microstore:view_order' uuid=order.uuid %}" class="has-text-weight-bold">
+                            {{ order.fullname }}
+                        </a>
+                    </div>
+                    <div>{{ order.address }}</div>
+                    <div><a href="tel:{{ order.phone }}">{{ order.phone }}</a></div>
+                </td>
+                <td>{{ order.total|intcomma }}</td>
+                <td>{{ order.additional_notes }}</td>
+                <td>{{ order.created_at|date:"D d M Y" }}</td>
+                <td>
+                    <a href="{% url 'microstore:view_order' uuid=order.uuid %}">
+                        <figure class="image is-16x16">
+                            <img src="{% static 'images/arrow-circle-right-solid.svg' %}" alt="Link">
+                        </figure>
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

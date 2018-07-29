@@ -1,0 +1,49 @@
+{% extends './account_base.html' %}
+
+{% block content %}
+    {% if request.user.is_authenticated %}
+    <div class="columns is-centered">
+        <div class="column is-4">
+            <div class="box has-text-centered">
+                <p>You are already logged in.</p>
+                <p><a href="{% url "microstore:index" %}" class="button is-fullwidth is-primary">Take me home</a></p>
+            </div>
+        </div>
+    </div>
+    {% else %}
+
+    <div class="columns is-centered">
+        <div class="column is-4">
+            <form class="form box" action="{% url 'login' %}" method="post">
+                {% csrf_token %}
+                {% if form.errors %}
+                    <p class="has-text-danger">Your username and password didn't match. Please try again.</p>
+                {% endif %}
+                <div class="field">
+                    {{ form.username }}
+                    {% if form.username.errors %}
+                        <span class="help is-danger">{{ form.username.errors }}</span>
+                    {% endif %}
+                </div>
+                <div class="field">
+                    {{ form.password }}
+                    {% if form.password.errors %}
+                        <span class="help is-danger">{{ form.password.errors }}</span>
+                    {% endif %}
+                </div>
+                <div class="field">
+                    <input type="hidden" name="next" value="{{ next }}">
+                    <button type="submit" name="submit" class="button is-fullwidth is-info">Login</button>
+                </div>
+                <p class="field has-text-centered">
+                    <a href="#" class="help">Forgot password</a>
+                </p>
+                <hr>
+                <div class="field">
+                    <p>Don't have an account? <b><a href="{% url 'register' %}?next={{ next }}">Sign up now</a></b></p>
+                </div>
+            </form>
+        </div>
+    </div>
+    {% endif %}
+{% endblock content %}

@@ -1,0 +1,83 @@
+{% load static %}
+<div class="hero newsletter">
+    <div class="hero-body">
+        <div class="container">
+            <div class="columns">
+                <div class="column">
+                    <h4 class="title is-5 is-marginless">Connect with us</h4>
+                    <p class="is-size-7">We always share amazing discounts on our social media pages</p>
+                    <ul class="social-links">
+                        <li><a href="#" class="tooltip" data-tooltip="Follow us on Instagram">
+                            <img src="{% static 'images/instagram.svg' %}" alt="Follow us on Instagram">
+                        </a></li>
+                        <li><a href="#" class="tooltip" data-tooltip="Follow us on Facebook">
+                            <img src="{% static 'images/facebook.svg' %}" alt="Follow us on Facebook">
+                        </a></li>
+                        <li><a href="#" class="tooltip" data-tooltip="Follow us on Twitter">
+                            <img src="{% static 'images/twitter.svg' %}" alt="Follow us on Twitter">
+                        </a></li>
+                    </ul>
+                </div>
+                <div class="column">
+                    <h4 class="title is-5 is-marginless">Sign up for our newsletter!</h4>
+                    <p class="is-size-7">Be the first to know when new and exciting products are available</p>
+                    <form action="#" method="post" class="is-fullwidth">
+                        {% csrf_token %}
+                        <div class="field has-addons">
+                            <div class="control is-expandable">
+                                <input type="email" class="input" name="email" placeholder="Email address">
+                            </div>
+                            <div class="control">
+                                <button type="submit" class="button is-primary">Subscribe</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<footer class="footer">
+
+    <div class="container">
+        <div class="columns propositions">
+            <div class="column">
+                <div class="wapper">
+                    <img src="{% static 'images/proposition-img-0.svg' %}" alt="Fast shipping">
+                    <span>Fast shipping</span>
+                </div>
+            </div>
+            <div class="column">
+                <div class="wapper">
+                    <img src="{% static 'images/proposition-img-3.svg' %}" alt="Fast shipping">
+                    <span>Certified Products</span>
+                </div>
+            </div>
+            <div class="column">
+                <div class="wapper">
+                    <img src="{% static 'images/locked.svg' %}" alt="Fast shipping">
+                    <span>Secured Checkout</span>
+                </div>
+            </div>
+        </div>
+    </div><br>
+    <hr>
+    <section id="footer-menu">
+        <div class="container has-text-centered">
+            <ul>
+                <li><a href="#">About Us</a></li>
+                <li><a href="#">Shipping &amp; Returns</a></li>
+                <li><a href="#">Privacy Policy</a></li>
+                <li><a href="#">Contact Us</a></li>
+            </ul>
+        </div>
+        <div class="has-text-centered footer-logo">
+            <img src="{% static 'images/the-lifestyle-shop.logo-white.svg' %}" alt="The Lifestyle Store">
+        </div>
+
+        <div class="has-text-centered credits">
+            The Lifestyle Store Nigeria - All Rights Reserved &copy; Copyright 2018
+        </div>
+    </section>
+
+</footer>

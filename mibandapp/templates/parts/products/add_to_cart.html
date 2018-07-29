@@ -1,0 +1,28 @@
+{% if product.quantity >= 1 %}
+<p>
+    <form action="{% url 'microstore:cart' %}" method="post" novalidate class="add_to_cart">
+        {% csrf_token %}
+        <div class="field is-grouped">
+            <div class="control">
+                <div class="field has-addons has-addons-right cart_widget">
+                    <div class="control">
+                        <button type="button" class="button minus">-</button>
+                    </div>
+                    <div class="control">
+                        <input type="number" name="quantity" size="3" class="quantity input" value="1" min="1" max="{{ product.quantity }}">
+                    </div>
+                    <div class="control">
+                        <button type="button" class="button plus">+</button>
+                    </div>
+                </div>
+            </div>
+            <div class="control">
+                <button type="submit" class="add-to-cart button is-primary">Add to cart</button>
+            </div>
+        </div>
+
+        <input type="hidden" name="product_id" value="{{ product.pk }}" class="product_id">
+
+    </form>
+</p>
+{% endif %}

@@ -1,0 +1,76 @@
+{% extends '../app_base.html' %}
+
+{% block content %}
+{% load static humanize %}
+<div class="hero is-medium">
+    <div class="hero-body">
+        <div class="container">
+            {% include "../parts/notification/message.html" %}
+            <div class="level is-mobile">
+                <div class="level-left">
+                    <h2 class="title is-4 level-item">Products</h2>
+                </div>
+                <div class="level-right">
+                    <a href="{% url 'microstore:add_product' %}" class="level-item button is-small is-primary">Add product</a>
+                </div>
+            </div>
+
+            <section id="products" class="box">
+                {% if products %}
+                    <form action="#" method="post">
+                        {% csrf_token %}
+                        <table class="table is-striped is-hoverable is-fullwidth order-table">
+                            <thead>
+                                <tr>
+                                    <th><input type="checkbox" name="select-all" value="select-all" id="select-all"></th>
+                                    <th>Image</th>
+                                    <th>Title</th>
+                                    <th>Quantity</th>
+                                    <th>Regular(N)</th>
+                                    <th>Sale(N)</th>
+                                    <th colspan="2">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for product in products %}
+                                    <tr class="{{ product.is_deleted|yesno:'deleted,' }}">
+                                        <td><input type="checkbox" name="product[]" value="{{ product.id }}"></td>
+                                        <td>
+                                            <figure class="image is-48x48">
+                                                <img src="{{ product.get_image }}" alt="{{ product.title }}">
+                                            </figure>
+                                        </td>
+                                        <td>
+                                            <a href="{% url 'microstore:product' id=product.id slug=product.slug %}" class="has-text-weight-bold">{{ product.title }}</a>
+                                        </td>
+                                        <td>{{ product.quantity }}</td>
+                                        <td>{{ product.regular_price|default:0.00|intcomma }}</td>
+                                        <td>{{ product.sale_price|intcomma }}</td>
+                                        <td>
+                                            <a href="{% url 'microstore:edit_product' id=product.id %}">
+                                                <figure class="image is-16x16">
+                                                    <img src="{% static 'images/pen-nib-solid.svg' %}" alt="Edit">
+                                                </figure>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a href="{% url 'microstore:delete_product' id=product.id %}">
+                                                <figure class="image is-16x16">
+                                                    <img src="{% static 'images/trash-alt-solid.svg' %}" alt="Trash">
+                                                </figure>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </form>
+                {% else %}
+                    <p class="has-text-danger">You do not have any products</p>
+                {% endif %}
+            </section>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

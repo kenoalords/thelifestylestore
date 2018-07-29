@@ -1,0 +1,5 @@
+<div class="columns is-multiline">
+    {% for product in products %}
+        {% include "./product.html" with product=product %}
+    {% endfor %}
+</div>

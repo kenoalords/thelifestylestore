@@ -1,0 +1,7 @@
+{% if messages %}
+<div class="notification is-primary">
+    {% for message in messages %}
+        {{ message|safe }}
+    {% endfor %}
+</div>
+{% endif %}

@@ -1,0 +1,21 @@
+{% extends '../app_base.html' %}
+
+{% load humanize %}
+{% block content %}
+
+<div class="hero is-medium">
+    <div class="hero-body">
+        <div class="container">
+            <h4 class="title is-4">Recent Orders</h4>
+            <section class="box">
+                {% if orders %}
+                    {% include '../parts/order/order_table.html' with orders=orders %}
+                {% else %}
+                    <h4 class="title has-text-danger is-6">You don't have any orders</h4>
+                {% endif %}
+            </section>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

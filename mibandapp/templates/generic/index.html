@@ -1,0 +1,42 @@
+{% extends "../app_base.html" %}
+
+{% load static %}
+{% block content %}
+
+    {% if sliders %}
+    <div id="slider">
+        {% for slider in sliders %}
+        <div style="background: url({{ slider.image.url }}) no-repeat top left; background-size: cover;">
+            <img src="{{ slider.image.url }}" alt="" class="slider-image">
+            <div class="info">
+                <h3 class="title is-2">{{ slider.title }}</h3>
+                <p>{{ slider.description }}</p>
+                <p>
+                    <a href="{% url 'microstore:product' id=slider.product.id slug=slider.product.slug %}" class="button is-primary is-large cta"><img src="{% static 'images/shopping-basket-solid-white.svg' %}" alt="Shopping Basket">Buy now</a>
+                </p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    <div class="hero">
+        <div class="hero-body has-text-centered">
+            <div class="columns is-centered">
+                <div class="column is-7">
+                    <h2 class="title is-3 is-size-4-mobile">Style like the Boss you are!</h2>
+                    <p>We offer the most stylish and affordable items that make you look like the boss and improve your lifestyle without spending a fortune</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="hero">
+        <div class="hero-body">
+            <div class="container">
+                {% include "../parts/notification/message.html" %}
+                {% include '../parts/products/products.html' with products=products %}
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}

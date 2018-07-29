@@ -1,0 +1,74 @@
+{% extends '../app_base.html' %}
+
+{% load humanize %}
+{% block content %}
+
+<div class="hero is-medium">
+    <div class="hero-body">
+        <div class="container">
+            <div class="columns is-centered">
+                <div class="column is-10">
+                    <h2 class="title is-4">Order No: {{ order.pk }}</h2>
+                    <section id="order-details">
+                        <table class="table is-fullwidth">
+                            <tbody>
+                                <!-- Header -->
+                                <tr>
+                                    <td>Logo</td>
+                                    <td colspan="3"></td>
+                                    <td>
+                                        <h4 class="title is-4">
+                                            {{ order.first_name }} {{ order.last_name }}
+                                        </h4>
+                                        <p>SHIP TO</p>
+                                        <p>{{ order.street }}, {{ order.city }}, {{ order.state }}.</p>
+                                        <p>Tel: {{ order.phone }}</p>
+                                    </td>
+                                </tr>
+
+                                <!-- Body -->
+                                <tr>
+                                    <th>No</th>
+                                    <th>Item(s)</th>
+                                    <th>Qty</th>
+                                    <th>Unit Price</th>
+                                    <th>Cost</th>
+                                </tr>
+                                {% for item in items %}
+                                    <tr>
+                                        <td>{{ item.key }}</td>
+                                        <td>{{ item.product.title }}</td>
+                                        <td>{{ item.quantity }}</td>
+                                        <td>{{ item.product.sale_price|intcomma }}</td>
+                                        <td>{{ item.total|intcomma }}</td>
+                                    </tr>
+                                {% endfor %}
+
+                                <tfoot>
+                                    <tr>
+                                        <th colspan="4" class="has-text-right">Total</th>
+                                        <th>{{ total|intcomma }}</th>
+                                    </tr>
+                                </tfoot>
+                            </tbody>
+                        </table>
+
+                        {% if order.is_paid == False %}
+                            <div>
+                                <a href="{% url 'microstore:pay' order=order.uuid %}" class="button is-primary">Pay Now</a>
+                            </div>
+                        {% endif %}
+
+                        {% if order.additional_notes %}
+                            <h4 class="title is-6">Additional Notes</h4>
+                            <hr>
+                            <p>{{ order.additional_notes }}</p>
+                        {% endif %}
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

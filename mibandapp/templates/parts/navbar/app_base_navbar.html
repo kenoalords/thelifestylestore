@@ -1,0 +1,88 @@
+{% load static %}
+
+<header id="topbar" class="hero is-dark is-small">
+    <nav class="hero-body">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-hidden-mobile">
+                    <p>Free shipping within Lagos</p>
+                </div>
+                <div class="column has-text-right">
+                    <ul class="menu">
+                        <li><a href="tel:09022422022"><img src="{% static 'images/telephone.svg' %}" alt="Phone"> +234 090 2242 2022</a></li>
+                        <li>
+                            {% if request.user.is_authenticated %}
+                                <div class="dropdown is-right is-hoverable">
+                                    <div class="dropdown-trigger">
+                                        <a href="{% url 'microstore:dashboard' %}" aria-haspopup="true" aria-controls="dropdown-menu">My Account</a>
+                                    </div>
+                                    <div class="dropdown-menu" id="dropdown-menu">
+                                        <div class="dropdown-content has-text-left">
+                                            {% if request.user.is_superuser %}
+                                            <a href="{% url 'microstore:dashboard' %}" class="dropdown-item">Dashboard</a>
+                                            <a href="{% url 'microstore:orders' %}" class="dropdown-item">Orders</a>
+                                            <a href="{% url 'microstore:products' %}" class="dropdown-item">Products</a>
+                                            {% else %}
+                                            <a href="#" class="dropdown-item">My Orders</a>
+                                            {% endif %}
+                                            <div class="dropdown-divider"></div>
+                                            <a href="{% url 'logout' %}" class="dropdown-item">Logout</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            {% else %}
+                                <a href="{% url 'login' %}">Login</a> <span style="opacity:0.4">or</span> <a href="{% url 'register' %}">Sign up</a>
+                            {% endif %}
+                        </li>
+                        <!-- <li></li> -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<nav id="topmenu">
+    <div class="container">
+        <div class="level is-mobile">
+            <div class="level-left">
+                <div class="level-item">
+                    <a href="#" class="icon">
+                        <img src="{% static 'images/menu-options.svg' %}" alt="Menu">
+                    </a>
+                </div>
+                <div class="level-item">
+                    <a href="#" class="icon">
+                        <img src="{% static 'images/instagram.svg' %}" alt="Instagram">
+                    </a>
+                </div>
+            </div>
+            <div class="level">
+                <a href="/" class="level-item logo has-text-centered">
+                    <img src="{% static 'images/the-lifestyle-shop.logo.svg' %}" alt="The Lifestyle Store">
+                </a>
+            </div>
+            <div class="level-right">
+                <div class="level-item">
+                    <a href="{% url 'microstore:cart' %}" class="cart" id="cart">
+                        <span class="badge" data-badge="{{ cart_count }}">
+                            <img src="{% static 'images/shopping-basket-solid.svg' %}" alt="Shopping Cart" class="cart-icon">
+                        </span>
+                    </a>
+                </div>
+                {% if request.user.is_authenticated %}
+                    {% if has_pending_order %}
+                        <div class="level-item">
+                            <a href="{% url 'microstore:pay' order=uuid %}" class="checkout">
+                                <span class="badge is-danger" data-badge="{{ order_count }}">
+                                    <img src="{% static 'images/credit-card.svg' %}" alt="Order" class="cart-icon">
+                                </span>
+                            </a>
+                        </div>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</nav>
