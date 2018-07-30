@@ -1,26 +1,33 @@
 {% load humanize static currency %}
-<div class="column is-4 single-list-product">
+<div class="column is-4 single-list-product" itemscope itemtype="http://schema.org/Product">
     <div class="lines top-left"></div>
     <div class="lines top-right"></div>
     <div class="lines bottom-right"></div>
     <div class="lines bottom-left"></div>
     <div class="box">
+        <meta itemprop="ratingValue" content="5">
+
         <figure class="image">
             <a href="{% url 'microstore:product' id=product.id slug=product.slug %}">
-                <img src="{{ product.get_image }}" alt="{{ product.title }}">
+                <img src="{{ product.get_image }}" alt="{{ product.title }}" itemprop="image">
             </a>
         </figure>
         <div class="details">
             {% include './ratings.html' with product=product %}
             <h2 class="title is-4 is-size-5-mobile">
-                <a href="{% url 'microstore:product' id=product.id slug=product.slug %}">{{ product.title }}</a>
+                <a href="{% url 'microstore:product' id=product.id slug=product.slug %}">
+                    <span itemprop="name">{{ product.title }}</span>
+                </a>
             </h2>
             {% if product.regular_price %}
                 <div class="regular_price is-marginless">
                     <del>{{ product.regular_price|intcomma|currency }}</del> <span class="save"> Save {{ product.regular_price|savings:product.sale_price|intcomma|currency }}</span>
                 </div>
             {% endif %}
-            <h4 class="title sale_price">{{ product.sale_price|intcomma|currency }}</h4>
+            <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+                <meta itemprop="priceCurrency" content="NGN">
+                <h4 class="title sale_price" itemprop="price" content="{{ product.sale_price }}">{{ product.sale_price|intcomma|currency }}</h4>
+            </div>
         </div>
     </div>
 </div>
