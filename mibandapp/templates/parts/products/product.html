@@ -14,7 +14,7 @@
         </figure>
         <div class="details">
             {% include './ratings.html' with product=product %}
-            <h2 class="title is-4 is-size-5-mobile">
+            <h2 class="title is-4">
                 <a href="{% url 'microstore:product' id=product.id slug=product.slug %}">
                     <span itemprop="name">{{ product.title }}</span>
                 </a>

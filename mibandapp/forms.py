@@ -55,8 +55,8 @@ class ProductForm(ModelForm):
     sale_price = IntegerField()
     regular_price = IntegerField(required=False)
     quantity = IntegerField()
-    brand = ModelChoiceField(queryset=Brand.objects.all())
-    category = ModelChoiceField(queryset=Category.objects.all())
+    brand = ModelChoiceField(queryset=Brand.objects.all(), required=False)
+    category = ModelChoiceField(queryset=Category.objects.all(), required=False)
 
     title.widget.attrs.update({'class':'input'})
     sale_price.widget.attrs.update({'class':'input'})

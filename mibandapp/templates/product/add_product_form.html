@@ -53,12 +53,18 @@
                                     <label>Select brand</label>
                                     <div class="select is-fullwidth">
                                         {{ form.brand }}
+                                        {% if form.brand.errors %}
+                                            <span class="help is-danger">{{ form.brand.errors }}</span>
+                                        {% endif %}
                                     </div>
                                 </div>
                                 <div class="control is-expanded">
                                     <label>Select Category</label>
                                     <div class="select is-fullwidth">
                                         {{ form.category }}
+                                        {% if form.category.errors %}
+                                            <span class="help is-danger">{{ form.category.errors }}</span>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>

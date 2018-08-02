@@ -26,12 +26,12 @@
                 </div>
                 <div class="column is-7">
                     <h1 class="title is-1 is-size-4-mobile" itemprop="name">{{ product.title }}</h1>
-                    <p itemprop="description">{{ product.description }}</p>
+                    <p itemprop="description">{{ product.description|safe|linebreaksbr }}</p>
                     <p>
                         <meta itemprop="ratingValue" content="5">
                         {% include '../parts/products/ratings.html' with count=298 %}
                     </p>
-                    <p itemscope itemtype="http://schema.org/Offer">
+                    <p itemscope itemtype="http://schema.org/Offer" id="buy-now">
                         {% if product.regular_price %}
                             <div class="regular_price is-marginless">
                                 <del>{{ product.regular_price|intcomma|currency }}</del> <span class="save"> Save {{ product.regular_price|savings:product.sale_price|intcomma|currency }}</span>
@@ -83,9 +83,9 @@
                     <div class="columns is-mobile product-detail-features {% cycle 'odd' 'even' %}">
                         <div class="column is-7 is-6-mobile">
                             <h3 class="title is-2">{{ detail.title }}</h3>
-                            <p>{{ detail.description }}</p>
+                            <p>{{ detail.description|safe|linebreaksbr }}</p>
                             <!-- Include add to cart form  -->
-                            {% include '../parts/products/add_to_cart.html' with product=product %}
+                            <a href="#buy-now" class="button is-primary">Buy now</a>
                         </div>
                         <div class="column is-5 is-4-mobile">
                             <figure class="image is-256x256">
