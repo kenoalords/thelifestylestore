@@ -1,0 +1,62 @@
+{% extends './email_base.html' %}
+
+{% block content %}
+
+{% load i18n currency humanize %}{% autoescape off %}
+<h4>{% blocktrans %}Dear {% endblocktrans %}{{ order.fullname }},</h4>
+<h4 class="thin">{% blocktrans %}Congratulations! Your order has been marked as paid{% endblocktrans %}</h4>
+<p>{% blocktrans %}Please review your order below{% endblocktrans %}</p>
+{% if items %}
+    <table style="width: 100%" class='order-table' cellpadding="0" cellspacing="0">
+        <thead>
+            <tr>
+                <td colspan="2" style="border: none">
+                    <p style="font-size:13px;">We will be shipping to</p>
+                    <h4 style="margin-bottom:5px; margin-top:0">{{ order.fullname }}</h4>
+                    <p style="margin-bottom:5px; margin-top:0">{{ order.address }}</p>
+                    <p style="margin-bottom:5px; margin-top:0">Tel: {{ order.phone }}</p>
+                </td>
+                <td style="border: none">
+                    <p style="margin-bottom:0; font-size:13px;">Transaction Reference:</p>
+                    <h4 style="margin:5px 0">{{ payment.reference }}</h4>
+                </td>
+            </tr>
+            <tr>
+                <th style="text-align: left">Product</th>
+                <th>Quantity</th>
+                <th style="text-align: right;">Cost</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+                <tr>
+                    <td>{{ item.product.title }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td style="text-align: right;">{{ item.product.sale_price|total_cost:item.quantity|intcomma|currency }}</td>
+                </tr>
+            {% endfor %}
+            <tr>
+                <th colspan="2" style="text-align: right; border: none;">Total</th>
+                <th style="border: none; text-align: right;">{{ order.total|intcomma|currency }}</th>
+            </tr>
+            <tr>
+                <th colspan="2" style="text-align: right; border: none;">Amount Paid</th>
+                <th style="border: none; text-align: right;">{{ payment.amount|intcomma|currency }}</th>
+            </tr>
+        </tbody>
+    </table>
+{% endif %}
+
+<p>
+    Your order will be reviewed and shipped immediately, thank you for shopping with us.
+</p>
+<p>
+    Don't forget to follow us on <a href="https://instagram.com/thelifestylestoreng" target="_blank">Instagram</a> and <a href="https://twitter.com/thelifestyleng">Twitter</a> for amazing discounts on new products weekly.
+</p>
+
+<h4 style="margin-bottom: 10px">The Storekeeper!</h4>
+<p style="font-size:13px; color: #999"></p>
+
+{% endautoescape %}
+
+{% endblock content %}

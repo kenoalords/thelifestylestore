@@ -11,10 +11,10 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from mibandapp.forms import OrderForm, ProductForm, ImageUploadForm, ProductFeaturesFormFormSet, ProductFeatureDetailFormSet, ProductImageFormSet
 from django.core.exceptions import ObjectDoesNotExist
-from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.views import LoginView, LogoutView, PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login, logout
-from mibandapp.auth_forms import CustomLoginForm, CustomUserCreationForm
+from mibandapp.auth_forms import CustomLoginForm, CustomUserCreationForm, CustomPasswordResetForm, CustomSetPasswordForm
 from django.utils.text import slugify
 from django.utils import timezone
 from mibandapp.utils import resize_and_crop
@@ -22,6 +22,12 @@ from django.forms import formset_factory, inlineformset_factory
 from django.core.validators import validate_email
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.core.mail import EmailMessage, EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+from django.contrib.sites.shortcuts import get_current_site
+from mibandapp.tasks import send_create_account_email, send_order_email, send_payment_recieved_email
+
 import requests
 import json
 # Create your views here.
@@ -316,6 +322,7 @@ class CheckoutTemplateView(TemplateView):
                     pass
 
                 del request.COOKIES['cart_id']
+                send_order_email.delay(self.user.first_name, self.user.email, cart.cart_id, total, order.id)
                 return redirect(reverse('microstore:pay', kwargs={ 'order': str(order.uuid) }))
         else:
             # Form not valid
@@ -350,6 +357,8 @@ class CustomRegisterationView(CreateView):
             username = slugify(email)
             user = User.objects.create_user(username=username, password=password, email=email, first_name=first_name,last_name=last_name)
             if user:
+                site = get_current_site(self.request)
+                send_create_account_email.delay(email=email, first_name=first_name, site_name=site.name)
                 auth_user = authenticate(username=username, password=password)
                 if auth_user is not None:
                     login(self.request, auth_user)
@@ -357,6 +366,19 @@ class CustomRegisterationView(CreateView):
                 else:
                     return redirect(reverse("login"))
 
+class CustomPasswordResetView(PasswordResetView):
+    form_class = CustomPasswordResetForm
+    success_url = reverse_lazy('reset_password_done')
+    email_template_name = 'email/password_reset_email.html'
+    html_email_template_name = 'email/password_reset_email.html'
+    subject_template_name = 'email/password_reset_email_subject.html'
+
+class CustomPasswordResetConfirmView(PasswordResetConfirmView):
+    template_name = 'registration/password_reset_confirm.html'
+
+class CustomPasswordResetDoneView(PasswordResetDoneView):
+    template_name = 'registration/password_reset_done.html'
+    form_class = CustomSetPasswordForm
 
 # Dashboard views
 class DashboardIndex(PermissionRequiredMixin, TemplateView):
@@ -471,6 +493,7 @@ class PaystackPaymentConfirm(View):
                     )
                     payment.order = order
                     payment.save()
+                    send_payment_recieved_email.delay(self.request.user.first_name, self.request.user.email, order.cart.cart_id, order.total, order.id, payment.id )
                     if amount == order.total:
                         return redirect(reverse('microstore:thankyou', kwargs={ 'order': str(order.uuid), 'status':'complete' }))
                     else:

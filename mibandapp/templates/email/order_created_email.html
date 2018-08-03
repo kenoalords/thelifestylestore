@@ -1,0 +1,50 @@
+{% extends './email_base.html' %}
+
+{% block content %}
+
+{% load i18n currency humanize %}{% autoescape off %}
+<h4>{% blocktrans %}Hello {{ first_name }},{% endblocktrans %}</h4>
+<h4 class="thin">{% blocktrans %}Thank you for shopping with us! Please find below your order details{% endblocktrans %}</h4>
+
+{% if items %}
+    <table style="width: 100%" class='order-table'>
+        <thead>
+            <tr>
+                <td colspan="3" style="border: none">
+                    <p style="font-size:13px;opacity:.8">We will be shipping to</p>
+                    <h4 style="margin-bottom:5px; margin-top:0">{{ order.fullname }}</h4>
+                    <p style="margin-bottom:5px; margin-top:0">{{ order.address }}</p>
+                    <p style="margin-bottom:5px; margin-top:0">Tel: {{ order.phone }}</p>
+                </td>
+            </tr>
+            <tr>
+                <th style="text-align: left">Product</th>
+                <th>Quantity</th>
+                <th>Cost</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+                <tr>
+                    <td>{{ item.product.title }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ item.product.sale_price|total_cost:item.quantity|intcomma|currency }}</td>
+                </tr>
+            {% endfor %}
+            <tr>
+                <th colspan="2" style="text-align: right; border: none;">Total</th>
+                <th style="border: none;">{{ total|intcomma|currency }}</th>
+            </tr>
+        </tbody>
+    </table>
+{% endif %}
+
+<p>
+    Your order will be shipped once your payment is verified.
+</p>
+
+<p>{% blocktrans %}The Storekeeper{% endblocktrans %}</p>
+
+{% endautoescape %}
+
+{% endblock content %}

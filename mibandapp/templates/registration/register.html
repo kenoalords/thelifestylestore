@@ -1,5 +1,6 @@
 {% extends './account_base.html' %}
 
+{% block title %}Create Account{% endblock %}
 {% block content %}
 
     <div class="columns is-centered">
@@ -45,7 +46,7 @@
                     <button type="submit" name="submit" class="button is-fullwidth is-info">Sign up</button>
                 </div>
                 <p class="field has-text-centered">
-                    <a href="#" class="help">Forgot password</a>
+                    <a href="{% url 'reset_password' %}">Forgot password</a>
                 </p>
                 <hr>
                 <div class="field">

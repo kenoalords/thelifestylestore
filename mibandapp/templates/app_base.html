@@ -23,12 +23,49 @@
         <link rel="manifest" href="{% static 'manifest.json' %}">
     </head>
     <body>
-        {% include "./parts/navbar/app_base_navbar.html" %}
-        <!-- Main content area -->
-        {% block content %}
-        {% endblock content %}
+        <nav id="slide-in-navbar">
+            <ul>
+                <li><a href="{% url 'microstore:index' %}">Home</a></li>
+                <li><a href="{% url 'microstore:all_products' %}">Products</a></li>
+                {% if request.user.is_authenticated %}
+                    <li class="divider"></li>
+                        {% if request.user.is_superuser %}
+                            <li><a href="{% url 'microstore:dashboard' %}">Dashboard</a></li>
+                            <li><a href="{% url 'microstore:orders' %}">Orders</a></li>
+                            <li><a href="{% url 'microstore:products' %}">Products</a></li>
+                        {% else %}
+                            <a href="#">My Orders</a>
+                        {% endif %}
+                    <li><a href="{% url 'logout' %}">Logout</a></li>
+                {% else %}
+                    <li><a href="{% url 'login' %}">Login</a></li>
+                    <li><a href="{% url 'register' %}">Create account</a></li>
+                {% endif %}
+                <li class="divider"></li>
+                <li><a href="#">Contact us</a></li>
+            </ul>
+        </nav>
+        <div id="site-wrapper">
+            {% include "./parts/navbar/app_base_navbar.html" %}
+            <!-- Main content area -->
+            {% block content %}
+            {% endblock content %}
 
-        {% include "./parts/app/footer.html" %}
+            {% include "./parts/app/footer.html" %}
+        </div>
+        <!--Start of Tawk.to Script-->
+        <script type="text/javascript">
+            var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+            (function(){
+            var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+            s1.async=true;
+            s1.src='https://embed.tawk.to/5b63a2dbdf040c3e9e0c3df1/default';
+            s1.charset='UTF-8';
+            s1.setAttribute('crossorigin','*');
+            s0.parentNode.insertBefore(s1,s0);
+            })();
+        </script>
+        <!--End of Tawk.to Script-->
         <script type="text/javascript" src="{% static 'js/main.js' %}"></script>
     </body>
 </html>

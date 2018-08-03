@@ -1,8 +1,8 @@
 from django.forms import TextInput, CharField, PasswordInput, EmailField, EmailInput
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, PasswordResetForm, SetPasswordForm
 
 class CustomLoginForm(AuthenticationForm):
-    username = CharField(max_length=64, widget=TextInput(attrs={'class': 'input', 'placeholder': 'Username'}))
+    username = CharField(max_length=64, widget=EmailInput(attrs={'class': 'input', 'placeholder': 'Email Address'}))
     password = CharField(max_length=64, widget=PasswordInput(attrs={'class': 'input', 'placeholder': 'Password'}))
 
     class Meta:
@@ -18,3 +18,14 @@ class CustomUserCreationForm(UserCreationForm):
 
     class Meta(UserCreationForm.Meta):
         fields = ('email', 'password1', 'password2')
+
+class CustomPasswordResetForm(PasswordResetForm):
+    email = EmailField(max_length=128, widget=EmailInput(attrs={ 'class': 'input', 'placeholder': 'Email Address' }))
+    class Meta:
+        fields = ('email',)
+
+class CustomSetPasswordForm(SetPasswordForm):
+    password = PasswordInput()
+
+    class Meta:
+        fields = ('password',)

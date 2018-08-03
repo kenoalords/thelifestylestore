@@ -1,5 +1,6 @@
 {% extends './account_base.html' %}
 
+{% block title %}Login{% endblock %}
 {% block content %}
     {% if request.user.is_authenticated %}
     <div class="columns is-centered">
@@ -17,7 +18,7 @@
             <form class="form box" action="{% url 'login' %}" method="post">
                 {% csrf_token %}
                 {% if form.errors %}
-                    <p class="has-text-danger">Your username and password didn't match. Please try again.</p>
+                    <p class="has-text-danger">Your email and password didn't match. Please try again.</p>
                 {% endif %}
                 <div class="field">
                     {{ form.username }}
@@ -36,11 +37,11 @@
                     <button type="submit" name="submit" class="button is-fullwidth is-info">Login</button>
                 </div>
                 <p class="field has-text-centered">
-                    <a href="#" class="help">Forgot password</a>
+                    <a href="{% url 'reset_password' %}">Forgot password</a>
                 </p>
                 <hr>
                 <div class="field">
-                    <p>Don't have an account? <b><a href="{% url 'register' %}?next={{ next }}">Sign up now</a></b></p>
+                    <p class="is-size-6">Don't have an account? <b><a href="{% url 'register' %}?next={{ next }}">Sign up now</a></b></p>
                 </div>
             </form>
         </div>

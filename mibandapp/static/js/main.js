@@ -639,7 +639,17 @@
                 qty.val(1)
             }
         }
-    })
+    });
+
+    $('body').on('click', '#menu-trigger', function(e){
+        e.preventDefault();
+        $('body').toggleClass('menu-active')
+    });
+
+    $('#site-wrapper').on('click', function(e){
+        e.preventDefault()
+        $('body').removeClass('menu-active')
+    });
 
 })(window, document, jQuery)
 

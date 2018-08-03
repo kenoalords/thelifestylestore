@@ -82,7 +82,7 @@
                 {% for detail in product.get_product_details %}
                     <div class="columns is-mobile product-detail-features {% cycle 'odd' 'even' %}">
                         <div class="column is-7 is-6-mobile">
-                            <h3 class="title is-2">{{ detail.title }}</h3>
+                            <h3 class="title is-3">{{ detail.title }}</h3>
                             <p>{{ detail.description|safe|linebreaksbr }}</p>
                             <!-- Include add to cart form  -->
                             <a href="#buy-now" class="button is-primary">Buy now</a>

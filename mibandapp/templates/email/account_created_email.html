@@ -1,0 +1,19 @@
+{% extends './email_base.html' %}
+
+{% block content %}
+
+{% load i18n %}{% autoescape off %}
+<h4>{% blocktrans %}Hello {{ first_name }},{% endblocktrans %}</h4>
+<h4 class="thin">{% blocktrans %}Thank you for signing up!{% endblocktrans %}</h4>
+
+<p>{{ site_name }} was created for special people like yourself. Our goal is to help you achieve a healthy and stylish lifestyle without breaking the bank</p>
+
+<p>
+    Feel free to browse around our online store and invite your friends to shop with us
+</p>
+
+<h4>{% blocktrans %}The Storekeeper{% endblocktrans %}</h4>
+
+{% endautoescape %}
+
+{% endblock content %}
