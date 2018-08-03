@@ -647,8 +647,10 @@
     });
 
     $('#site-wrapper').on('click', function(e){
-        e.preventDefault()
-        $('body').removeClass('menu-active')
+        if( $('body').hasClass('menu-active') ){
+            e.preventDefault()
+            $('body').removeClass('menu-active')
+        }
     });
 
 })(window, document, jQuery)
