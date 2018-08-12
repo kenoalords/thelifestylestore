@@ -21,7 +21,7 @@ from mibandapp.utils import resize_and_crop
 from django.forms import formset_factory, inlineformset_factory
 from django.core.validators import validate_email
 from django.contrib.auth.decorators import login_required, permission_required
-from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
 from django.core.mail import EmailMessage, EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
@@ -438,6 +438,14 @@ class OrderAllView(PermissionRequiredMixin, ListView):
     template_name = 'admin/orders.html'
     model = Order
     context_object_name = 'orders'
+
+class MyOrderView(LoginRequiredMixin, TemplateView):
+    template_name = 'parts/order/my_order.html'
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context['orders'] = Order.objects.filter(user=self.request.user)
+        return context
 
 class OrderSingleView(PermissionRequiredMixin, DetailView):
     permission_required = ('microstore.can_manage_order')

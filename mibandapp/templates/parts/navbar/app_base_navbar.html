@@ -15,7 +15,11 @@
                             {% if request.user.is_authenticated %}
                                 <div class="dropdown is-right is-hoverable">
                                     <div class="dropdown-trigger">
-                                        <a href="{% url 'microstore:dashboard' %}" aria-haspopup="true" aria-controls="dropdown-menu">My Account</a>
+                                        {% if request.user.is_superuser %}
+                                            <a href="{% url 'microstore:dashboard' %}" aria-haspopup="true" aria-controls="dropdown-menu">My Account</a>
+                                        {% else %}
+                                            <a href="{% url 'microstore:my_orders' %}" aria-haspopup="true" aria-controls="dropdown-menu">My Account</a>
+                                        {% endif %}
                                     </div>
                                     <div class="dropdown-menu" id="dropdown-menu">
                                         <div class="dropdown-content has-text-left">
@@ -24,7 +28,7 @@
                                             <a href="{% url 'microstore:orders' %}" class="dropdown-item">Orders</a>
                                             <a href="{% url 'microstore:products' %}" class="dropdown-item">Products</a>
                                             {% else %}
-                                            <a href="#" class="dropdown-item">My Orders</a>
+                                            <a href="{% url 'microstore:my_orders' %}" class="dropdown-item">My Orders</a>
                                             {% endif %}
                                             <div class="dropdown-divider"></div>
                                             <a href="{% url 'logout' %}" class="dropdown-item">Logout</a>

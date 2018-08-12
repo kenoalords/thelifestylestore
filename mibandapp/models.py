@@ -180,6 +180,9 @@ class Order(models.Model):
     def fullname(self):
         return "{} {}".format(self.first_name, self.last_name)
 
+    def items(self):
+        return Item.objects.filter(cart=self.cart)
+
     def __str__(self):
         return "{} {}".format(self.first_name, self.last_name)
 
