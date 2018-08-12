@@ -144,7 +144,7 @@ class ProductLikeAdd(View):
                 like = ProductLike.objects.create(product=product, cookie_id=cookie_id)
                 like.save()
                 if self.request.is_ajax():
-                    count = ProductLike.objects.filter(product=product, cookie_id=cookie_id).count()
+                    count = ProductLike.objects.filter(product=product).count()
                     return JsonResponse({ 'status': True, 'count': count  })
                 else:
                     messages.success(request, 'You liked %s!' % product.title)
