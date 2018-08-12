@@ -4,7 +4,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from datetime import datetime
 from django.utils import timezone
-from mibandapp.managers import ActiveProducts, ActiveProductSliders
+from mibandapp.managers import ActiveProducts, ActiveProductSliders, FeaturedProduct
 
 # Create your models here.
 class Image(models.Model):
@@ -66,10 +66,12 @@ class Product(models.Model):
     weight = models.DecimalField(max_digits=4, decimal_places=2, blank=True, default=0.5)
     is_deleted = models.BooleanField(default=False)
     deleted_at = models.DateTimeField(null=True, blank=True)
+    is_featured = models.BooleanField(default=False)
 
     # Managers
     objects = models.Manager()
     active = ActiveProducts()
+    featured = FeaturedProduct()
 
     def __str__(self):
         return self.title

@@ -25,6 +25,12 @@
                                     <span class="help is-danger">{{ form.description.errors }}</span>
                                 {% endif %}
                             </div>
+                            <div class="field">
+                                <label>{{ form.is_featured }} {{ form.is_featured.label }}</label>
+                                {% if form.is_featured.errors %}
+                                    <span class="help is-danger">{{ form.is_featured.errors }}</span>
+                                {% endif %}
+                            </div>
                             <div class="field is-grouped">
                                 <div class="control is-expanded">
                                     <label>{{ form.regular_price.label }}</label>

@@ -7,3 +7,7 @@ class ActiveProducts(models.Manager):
 class ActiveProductSliders(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(is_active=True)
+
+class FeaturedProduct(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(is_featured=True).order_by('created_at')

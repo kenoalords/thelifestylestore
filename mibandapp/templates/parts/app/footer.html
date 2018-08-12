@@ -6,7 +6,7 @@
             <div class="box" style="background: url({% static 'images/signup-background.jpg' %}) no-repeat center; background-size: cover">
                 <div class="columns is-centered">
                     <div class="column is-6">
-                        <h3 class="title is-2">Enjoy the beautiful things of life</h3>
+                        <h3 class="title is-2 is-size-3-mobile">Enjoy the beautiful things of life</h3>
                         <p>Be the first to know when new and exciting products are available</p>
                         <form action="#" method="post" class="is-fullwidth" id="email-sub-form">
                             {% csrf_token %}
@@ -89,6 +89,9 @@
         </div>
         <div class="has-text-centered footer-logo">
             <img src="{% static 'images/the-lifestyle-shop.logo-white.svg' %}" alt="The Lifestyle Store">
+            <a href="https://paystack.com" target="_blank">
+                <img src="{% static 'images/paystack-cards-white.png' %}" alt="Paystack" style="width:140px; margin-left:10px; position:relative; top: 5px;">
+            </a>
         </div>
 
         <div class="has-text-centered credits">

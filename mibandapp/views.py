@@ -37,7 +37,7 @@ class IndexView(TemplateView):
     template_name = 'generic/index.html'
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['products'] = Product.active.all()
+        context['products'] = Product.featured.all()
         context['sliders'] = ProductSlider.active.all()
         context['brands'] = Brand.objects.all()[:4]
         return context

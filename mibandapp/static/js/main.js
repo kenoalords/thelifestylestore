@@ -641,15 +641,23 @@
         }
     });
 
+
+
+    // $('#site-wrapper').on('click', function(e){
+    //     if( $('body').hasClass('menu-active') ){
+    //         e.preventDefault()
+    //         $('body').removeClass('menu-active')
+    //     }
+    // });
+
     $('body').on('click', '#menu-trigger', function(e){
         e.preventDefault();
-        $('body').toggleClass('menu-active')
-    });
-
-    $('#site-wrapper').on('click', function(e){
         if( $('body').hasClass('menu-active') ){
-            e.preventDefault()
             $('body').removeClass('menu-active')
+            $('#menu-trigger').find('i').removeClass('fa-bars').addClass('fa-close');
+        } else {
+            $('body').addClass('menu-active');
+            $('#menu-trigger').find('i').addClass('fa-bars').removeClass('fa-close');
         }
     });
 
