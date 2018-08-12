@@ -1,0 +1,20 @@
+{% extends './email_base.html' %}
+
+{% block content %}
+
+{% load i18n %}{% autoescape off %}
+<h4>Hello {{ first_name }},</h4>
+<h4 class="thin">{% blocktrans %}We have created an account for you.{% endblocktrans %}</h4>
+
+<p>
+    We noticed you've never shopped with us before so we decided to create an account for you.
+    To log into your account at anytime please use your registered email address with the following password;
+</p>
+<p><strong>{{ password }}</strong></p>
+
+<p>Please change this password as soon as possible to prevent theft.</p>
+<h4>{% blocktrans %}The Storekeeper{% endblocktrans %}</h4>
+
+{% endautoescape %}
+
+{% endblock content %}

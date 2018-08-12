@@ -5,6 +5,7 @@
 
     <div class="columns is-centered">
         <div class="column is-4">
+            {% include "../parts/notification/message.html" %}
             <form class="form box" action="{% url 'register' %}" method="post">
                 {% csrf_token %}
 
@@ -42,7 +43,7 @@
                     {% endif %}
                 </div>
                 <div class="field">
-                    <input type="hidden" name="next" value="{{ next }}">
+                    <input type="hidden" name="next" value="{{ request.GET.next }}">
                     <button type="submit" name="submit" class="button is-fullwidth is-info">Sign up</button>
                 </div>
                 <p class="field has-text-centered">

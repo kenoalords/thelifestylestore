@@ -2,7 +2,7 @@
 
 {% block content %}
 {% load humanize currency %}
-<form action="#" method="post" novalidate>
+<form action="{% url 'microstore:checkout' %}" method="post" novalidate>
 {% csrf_token %}
 <div class="hero is-medium">
     <div class="hero-body">
@@ -36,6 +36,7 @@
 
                     <div class="field">
                         {{ form.email }}
+                        <input type="text" name="url" class="required">
                         {% if form.email.errors %}
                             <span class="help is-danger">{{ form.email.errors }}</span>
                         {% endif %}
@@ -49,7 +50,7 @@
                     <hr>
                     <!-- Shipping Address -->
                     <div class="field">
-                        <h4 class="title is-6">Ship to (We only ship within Nigeria)</h4>
+                        <h4 class="title is-6">Ship to: (We only ship within Nigeria)</h4>
                     </div>
                     <div class="field">
                         {{ form.street }}
@@ -73,15 +74,6 @@
                             {% endif %}
                         </div>
                     </div>
-                    {% if shipping_address.count > 0 %}
-                        <h4 class="title is-6">Ship to a previous address</h4>
-                        {% for address in shipping_address %}
-                            <div class="notification is-light">
-                                {{ address.street }}
-                            </div>
-                        {% endfor %}
-                    {% endif %}
-                    <hr>
                     <!-- Gift check  -->
                     <div class="field">
                         <label>

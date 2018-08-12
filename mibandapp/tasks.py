@@ -14,6 +14,13 @@ def send_create_account_email(email, first_name, site_name):
     email.send()
 
 @shared_task
+def send_create_account_email_checkout(email, first_name, password):
+    email_body = render_to_string('email/account_created_email_checkout.html', context={'first_name': first_name, 'password': password})
+    email = EmailMultiAlternatives(to=[email], subject='We have created an account for you!', body=strip_tags(email_body))
+    email.attach_alternative(email_body, 'text/html')
+    email.send()
+
+@shared_task
 def send_order_email(name, email, cart, total, order):
     cart_id = Cart.objects.get(cart_id__exact=cart)
     items = Item.objects.filter(cart=cart_id)

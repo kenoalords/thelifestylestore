@@ -25,7 +25,11 @@ class CustomPasswordResetForm(PasswordResetForm):
         fields = ('email',)
 
 class CustomSetPasswordForm(SetPasswordForm):
-    password = PasswordInput()
+    new_password1 = CharField(max_length=64, widget=PasswordInput(attrs={'class': 'input', 'placeholder': 'New Password'}))
+    new_password2 = CharField(max_length=64, widget=PasswordInput(attrs={'class': 'input', 'placeholder': 'Confirm Password'}))
 
     class Meta:
-        fields = ('password',)
+        fields = ('new_password1', 'new_password2')
+        widgets = {
+            ''
+        }

@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from mibandapp.views import CustomLoginView, CustomLogoutView, CustomRegisterationView, CustomPasswordResetView, CustomPasswordResetDoneView, CustomPasswordResetConfirmView
+from mibandapp.views import CustomLoginView, CustomLogoutView, CustomRegisterationView, CustomPasswordResetView, CustomPasswordResetDoneView, CustomPasswordResetConfirmView, CustomPasswordResetCompleteView
 from django.contrib.auth import views
 from django.conf.urls import url
 from django.views.generic import TemplateView
@@ -30,4 +30,5 @@ urlpatterns = [
     path('accounts/reset_password/', CustomPasswordResetView.as_view(), name="reset_password"),
     path('accounts/reset_password/done', CustomPasswordResetDoneView.as_view(), name="reset_password_done"),
     path('accounts/reset/<uidb64>/<token>/', CustomPasswordResetConfirmView.as_view(), name="password_reset_confirm"),
+    path('accounts/reset/done', CustomPasswordResetCompleteView.as_view(), name="password_reset_complete"),
 ]

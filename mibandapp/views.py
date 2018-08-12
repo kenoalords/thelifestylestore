@@ -26,7 +26,7 @@ from django.core.mail import EmailMessage, EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.contrib.sites.shortcuts import get_current_site
-from mibandapp.tasks import send_create_account_email, send_order_email, send_payment_recieved_email
+from mibandapp.tasks import send_create_account_email, send_order_email, send_payment_recieved_email, send_create_account_email_checkout
 
 import requests
 import json
@@ -267,18 +267,36 @@ class CheckoutTemplateView(TemplateView):
                 return HttpResponseRedirect(reverse("microstore:index"))
 
     def post(self, request):
-        cart_id = self.request.get_signed_cookie('cart_id')
+        cart_id = None
+        try:
+            cart_id = self.request.get_signed_cookie('cart_id')
+        except Exception as ex:
+            print(ex)
+            return HttpResponseRedirect(reverse('microstore:index'))
         cart = Cart.objects.get(cart_id__exact=cart_id)
         items = Item.objects.filter(cart=cart)
         total = sum( [item.product.sale_price * item.quantity for item in items] )
         form = OrderForm(request.POST)
         user = None
         order_check = None
+
+        try:
+            user_id = self.request.get_signed_cookie('_t')
+        except Exception as ex:
+            print(ex)
+            return HttpResponseRedirect(reverse('microstore:index'))
+
+        if not items.exists():
+            print('Failed!')
+            return HttpResponseRedirect(reverse('microstore:index'))
+        if self.request.POST.get('url'):
+            return HttpResponseRedirect(reverse('microstore:index'))
+
         if form.is_valid():
             email = form.cleaned_data['email']
             first_name = form.cleaned_data['first_name']
             last_name = form.cleaned_data['last_name']
-            password = 'mclone1881'
+            password = User.objects.make_random_password()
             username = slugify(email)
             # Check if the user is authenticated
             if request.user.is_authenticated:
@@ -294,8 +312,10 @@ class CheckoutTemplateView(TemplateView):
                     # Authenticate the new account
                     auth_new_user = authenticate(username=username, password=password)
                     if auth_new_user:
+                        send_create_account_email_checkout.delay(email, first_name, password)
                         login(request, auth_new_user)
                         self.user = auth_new_user
+
 
             # Check if the order is stale and not paid for
             try:
@@ -359,12 +379,12 @@ class CustomRegisterationView(CreateView):
         first_name = form.cleaned_data['first_name']
         last_name = form.cleaned_data['last_name']
         next = ''
-        if 'next' in form.cleaned_data:
-            next = '?next=%s' % form.cleaned_data['next']
-
+        # print(form.cleaned_data)
+        if 'next' in self.request.GET:
+            next = '?next=%s' % self.request.GET.get('next')
         try:
             email_check = User.objects.get(email__exact=email)
-            return redirect(reverse("login") + next)
+            return redirect(reverse("login") + next_link)
         except ObjectDoesNotExist:
             username = slugify(email)
             user = User.objects.create_user(username=username, password=password, email=email, first_name=first_name,last_name=last_name)
@@ -374,7 +394,7 @@ class CustomRegisterationView(CreateView):
                 auth_user = authenticate(username=username, password=password)
                 if auth_user is not None:
                     login(self.request, auth_user)
-                    return HttpResponseRedirect(next or '/')
+                    return HttpResponseRedirect(self.request.GET.get('next') or '/')
                 else:
                     return redirect(reverse("login"))
 
@@ -387,6 +407,11 @@ class CustomPasswordResetView(PasswordResetView):
 
 class CustomPasswordResetConfirmView(PasswordResetConfirmView):
     template_name = 'registration/password_reset_confirm.html'
+    context_object_name = 'form'
+    form_class = CustomSetPasswordForm
+
+class CustomPasswordResetCompleteView(TemplateView):
+    template_name = 'registration/password_reset_complete.html'
 
 class CustomPasswordResetDoneView(PasswordResetDoneView):
     template_name = 'registration/password_reset_done.html'
