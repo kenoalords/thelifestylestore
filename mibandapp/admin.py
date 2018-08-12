@@ -1,5 +1,5 @@
 from django.contrib import admin
-from mibandapp.models import Product, Image, Country, State, City, FeatureList, ShippingZone, ProductSlider, Brand, Category
+from mibandapp.models import Product, Image, Country, State, City, FeatureList, ShippingZone, ProductSlider, Brand, Category, Order
 
 # Register your models here.
 admin.site.register(Product)
@@ -12,3 +12,4 @@ admin.site.register(ShippingZone)
 admin.site.register(ProductSlider)
 admin.site.register(Brand)
 admin.site.register(Category)
+admin.site.register(Order)

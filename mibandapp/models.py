@@ -180,6 +180,9 @@ class Order(models.Model):
     def fullname(self):
         return "{} {}".format(self.first_name, self.last_name)
 
+    def __str__(self):
+        return self.fullname
+
     class Meta:
         ordering = ["-created_at"]
         permissions = (
