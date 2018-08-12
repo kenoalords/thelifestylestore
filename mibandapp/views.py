@@ -5,7 +5,7 @@ from django.urls import reverse_lazy
 from django.shortcuts import render, reverse, redirect, render_to_response
 from django.views.generic import TemplateView, View, CreateView, DetailView, ListView, FormView, UpdateView
 from django.db.models import Sum
-from mibandapp.models import Product, Cart, Order, Item, ShippingAddress, Payment, Image, ProductFeature, ProductLike, ProductNotification, ProductSlider, ProductImage
+from mibandapp.models import Product, Cart, Order, Item, ShippingAddress, Payment, Image, ProductFeature, ProductLike, ProductNotification, ProductSlider, ProductImage, Brand
 from datetime import datetime
 from django.contrib import messages
 from django.contrib.auth.models import User
@@ -39,6 +39,7 @@ class IndexView(TemplateView):
         context = super().get_context_data(**kwargs)
         context['products'] = Product.active.all()
         context['sliders'] = ProductSlider.active.all()
+        context['brands'] = Brand.objects.all()[:4]
         return context
 
 class ProductsAll(ListView):
@@ -211,12 +212,12 @@ class PaymentView(TemplateView):
         # return render(request, self.template_name)
 
 class DeleteCartItemView(View):
-    def post(self, request):
+    def post(self, request, *args, **kwargs):
         try:
-            product = Product.objects.get(pk=request.POST['pk'])
             cart_id = request.get_signed_cookie('cart_id')
             cart = Cart.objects.get(cart_id__exact=cart_id)
-            item = Item.objects.get(cart=cart, product=product)
+            item = Item.objects.get(cart=cart, pk=self.kwargs['id'])
+            product = Product.objects.get(pk=item.product.id)
             product.quantity += item.quantity
             product.save()
             item.delete()
@@ -224,8 +225,19 @@ class DeleteCartItemView(View):
             return HttpResponseRedirect(reverse('microstore:cart'))
         except Exception as ex:
             print(ex)
+            return HttpResponseRedirect(reverse('microstore:cart'))
+
+    def get(self, request, *args, **kwargs):
+        try:
+            cookie = request.get_signed_cookie('cart_id')
+            cart_id = Cart.objects.get(cart_id__exact=cookie)
+            item = Item.objects.get(pk=self.kwargs['id'], cart=cart_id)
+            return render(request, template_name='generic/product_delete.html', context={'item': item})
+        except Exception as ex:
+            return HttpResponseRedirect(reverse('microstore:cart'))
 
     def http_method_not_allowed(self, request, *args, **kwargs):
+        messages.success(request, 'method not allowed')
         return HttpResponseRedirect(reverse('microstore:cart'))
 
 class CheckoutTemplateView(TemplateView):
@@ -659,3 +671,13 @@ class ProductDelete(PermissionRequiredMixin, DetailView):
             except Exception as ex:
                 print(ex)
                 return redirect(reverse('microstore:products'))
+
+
+class AboutUsPageView(TemplateView):
+    template_name = 'pages/about.html'
+
+class PrivacyPolicyPageView(TemplateView):
+    template_name = 'pages/privacy.html'
+
+class ContactUsPageView(TemplateView):
+    template_name = 'pages/contact.html'

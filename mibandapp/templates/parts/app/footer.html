@@ -1,37 +1,56 @@
 {% load static %}
-<div class="hero newsletter">
+
+<div class="hero" id="newsletter-wrapper">
     <div class="hero-body">
         <div class="container">
-            <div class="columns">
-                <div class="column">
-                    <h4 class="title is-5 is-marginless">Connect with us</h4>
-                    <p class="is-size-7">We always share amazing discounts on our social media pages</p>
-                    <ul class="social-links">
-                        <li><a href="https://instagram.com/thelifestylestoreng" target="_blank" rel="noopener" class="tooltip" data-tooltip="Follow us on Instagram">
-                            <img src="{% static 'images/instagram.svg' %}" alt="Follow us on Instagram">
-                        </a></li>
-                        <li><a href="https://twitter.com/thelifestyleng" target="_blank" rel="noopener" class="tooltip" data-tooltip="Follow us on Twitter">
-                            <img src="{% static 'images/twitter.svg' %}" alt="Follow us on Twitter">
-                        </a></li>
-                    </ul>
-                </div>
-                <div class="column">
-                    <h4 class="title is-5 is-marginless">Sign up for our newsletter!</h4>
-                    <p class="is-size-7">Be the first to know when new and exciting products are available</p>
-                    <form action="#" method="post" class="is-fullwidth">
-                        {% csrf_token %}
-                        <div class="field has-addons">
-                            <div class="control is-expandable">
-                                <input type="email" class="input" name="email" placeholder="Email address">
+            <div class="box" style="background: url({% static 'images/signup-background.jpg' %}) no-repeat center; background-size: cover">
+                <div class="columns is-centered">
+                    <div class="column is-6">
+                        <h3 class="title is-2">Enjoy the beautiful things of life</h3>
+                        <p>Be the first to know when new and exciting products are available</p>
+                        <form action="#" method="post" class="is-fullwidth" id="email-sub-form">
+                            {% csrf_token %}
+                            <div class="field has-addons is-fullwidth">
+                                <div class="control is-expanded has-icons-left">
+                                    <input type="email" id="newsletter-email" class="input" name="email" placeholder="Email address">
+                                    <span class="icon is-small is-left">
+                                        <i class="fas fa-envelope"></i>
+                                    </span>
+                                </div>
+                                <div class="control">
+                                    <button type="submit" id="newsletter-submit" class="button is-primary">Subscribe</button>
+                                </div>
                             </div>
-                            <div class="control">
-                                <button type="submit" class="button is-primary">Subscribe</button>
+                            <div class="newsletter-extras">
+                                <div class="field">
+                                    <input type="text" class="input" id="newsletter-fname" name="fname" placeholder="First name">
+                                </div>
+                                <div class="field">
+                                    <input type="text" class="input" id="newsletter-lname" name="lname" placeholder="Last name">
+                                </div>
                             </div>
-                        </div>
-                    </form>
+                            <input type="hidden" name="u" id="newsletter-u" value="3598467e1097a2ce993ae29e7">
+                            <input type="hidden" name="id" id="newsletter-id" value="614bd9a1bb">
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
+    </div>
+</div>
+
+<div class="hero">
+    <div class="hero-body has-text-centered">
+        <h4 class="title is-4 is-marginless">Connect with us</h4>
+        <p>We always share amazing discounts on our social media pages</p>
+        <ul class="social-links">
+            <li><a href="https://instagram.com/thelifestylestoreng" target="_blank" rel="noopener" class="tooltip" data-tooltip="Follow us on Instagram">
+                <img src="{% static 'images/instagram.svg' %}" alt="Follow us on Instagram">
+            </a></li>
+            <li><a href="https://twitter.com/thelifestyleng" target="_blank" rel="noopener" class="tooltip" data-tooltip="Follow us on Twitter">
+                <img src="{% static 'images/twitter.svg' %}" alt="Follow us on Twitter">
+            </a></li>
+        </ul>
     </div>
 </div>
 <footer class="footer">
@@ -62,10 +81,10 @@
     <section id="footer-menu">
         <div class="container has-text-centered">
             <ul>
-                <li><a href="#">About Us</a></li>
+                <li><a href="{% url 'microstore:about_us' %}">About Us</a></li>
                 <li><a href="#">Shipping &amp; Returns</a></li>
-                <li><a href="#">Privacy Policy</a></li>
-                <li><a href="#">Contact Us</a></li>
+                <li><a href="{% url 'microstore:privacy' %}">Privacy Policy</a></li>
+                <li><a href="{% url 'microstore:contact' %}">Contact Us</a></li>
             </ul>
         </div>
         <div class="has-text-centered footer-logo">

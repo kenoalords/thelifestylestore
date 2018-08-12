@@ -1,6 +1,4 @@
-<h1 class="title is-3 has-text-centered">Products</h1>
-<hr>
-<div class="columns is-multiline">
+<div class="columns is-multiline carousel" style="padding: 10px;">
     {% for product in products %}
         {% include "./product.html" with product=product %}
     {% endfor %}

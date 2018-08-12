@@ -19,24 +19,55 @@
         {% endfor %}
     </div>
     {% endif %}
+
     <div class="hero">
-        <div class="hero-body has-text-centered">
-            <div class="columns is-centered">
-                <div class="column is-7">
-                    <h2 class="title is-3 is-size-4-mobile">Style like the Boss you are!</h2>
-                    <p>We offer the most stylish and affordable items that make you look like the boss and improve your lifestyle without spending a fortune</p>
+        <div class="hero-body">
+            <div class="container">
+
+                <div class="level is-mobile">
+                    <div class="level-left">
+                        <div class="level-item">
+                            <h2 class="title is-4 has-text-centered">Featured products</h2>
+                        </div>
+                    </div>
+                    <div class="level-left">
+                        <div class="level-item">
+                            <a href="{% url 'microstore:all_products' %}" class="button is-primary is-small">
+                                <span class="icon"><i class="fas fa-th-large"></i></span>
+                                <span>All products</span>
+                                <span class="icon"><i class="fas fa-long-arrow-alt-right"></i></span>
+                            </a>
+                        </div>
+                    </div>
                 </div>
+                <hr>
+                {% include "../parts/notification/message.html" %}
+                {% include '../parts/products/products_carousel.html' with products=products %}
             </div>
         </div>
     </div>
+
+
+    {% if brands %}
     <hr>
     <div class="hero">
         <div class="hero-body">
             <div class="container">
-                {% include "../parts/notification/message.html" %}
-                {% include '../parts/products/products.html' with products=products %}
+
+                <h2 class="title is-4 has-text-centered">Top Brands</h2>
+                <div class="columns is-centered is-mobile">
+                    {% for brand in brands %}
+                        <div class="column is-2">
+                            <figure class="image">
+                                <img src="{{ brand.image.url }}" alt="{{ brand.name }}">
+                            </figure>
+                        </div>
+                    {% endfor %}
+                </div>
             </div>
         </div>
     </div>
+    {% endif %}
+
 
 {% endblock content %}

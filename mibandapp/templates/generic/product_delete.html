@@ -1,0 +1,44 @@
+{% extends '../app_base.html' %}
+
+{% load currency humanize %}
+{% block content %}
+
+<div class="hero is-medium">
+    <div class="hero-body">
+        <div class="container">
+            <div class="columns is-centered">
+                <div class="column is-6">
+                    <h1 class="title is-3">Are you sure you want to remove this item from your shopping cart?</h1>
+                    <hr>
+                    <div class="columns">
+                        <div class="column is-3">
+                            <figure class="image"><img src="{{ item.product.get_image }}" alt="{{ item.product.title }}"></figure>
+                        </div>
+                        <div class="column is-9">
+                            <h3 class="title is-5">
+                                <a href="{% url 'microstore:product' id=item.product.id slug=item.product.slug %}">
+                                    {{ item.product.title }}
+                                </a>
+                            </h3>
+                            <div class="level is-mobile">
+                                <div class="level-left">
+                                    <div class="level-item">Qty: {{ item.quantity }}</div>
+                                    <div class="level-item">Total: {{ item.product.sale_price|total_cost:item.quantity|intcomma|currency }}</div>
+                                </div>
+                            </div>
+                            <div>
+                                <form action="{% url "microstore:remove_cart_item" id=item.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="button is-danger">Remove item</button>
+                                    <a href="{% url 'microstore:cart' %}" class="button is-white">Back to cart</a>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

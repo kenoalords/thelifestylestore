@@ -11,18 +11,28 @@
 
                     {% if items %}
                         {% if items.count > 0 %}
-                            <h2 class="title is-2 has-text-centered">Your shopping basket</h2>
+                            <div class="level is-mobile">
+                                <div class="level-left">
+                                    <h2 class="title is-5 level-item">Cart</h2>
+                                </div>
+                                <div class="level-right">
+                                    <a href="{% url 'microstore:all_products' %}">
+                                        <h3 class="title is-6 has-text-info">Continue shopping</h3>
+                                    </a>
+                                </div>
+                            </div>
+
                             <hr>
                             {% for item in items %}
                                 <div class="columns single-cart-product">
-                                    <div class="column is-2">
+                                    <div class="column is-3">
                                         <figure class="image">
                                             <img src="{{ item.product.get_image }}" alt="{{ product.title }}">
                                         </figure>
                                     </div>
-                                    <div class="column is-10">
+                                    <div class="column is-7">
                                         <a href="{% url 'microstore:product' id=item.product.id slug=item.product.slug %}">
-                                            <h2 class="title is-5" style="margin-bottom: 1em">{{ item.product.title }}</h2>
+                                            <h2 class="title is-4" style="margin-bottom: 1em">{{ item.product.title }}</h2>
                                         </a>
                                         {% if item.product.regular_price %}
                                             <div class="regular_price is-marginless">
@@ -30,31 +40,24 @@
                                             </div>
                                         {% endif %}
                                         <h3 class="title is-5">{{ item.product.sale_price|intcomma|currency }}</h3>
-                                        <div class="level is-mobile">
-                                            <div class="level-left">
-                                                <form action="#" method="POST"></form>
-                                                <h5 class="level-item">Qty: {{ item.quantity }}</h5>
-                                                <h5 class="level-item">Total: {{ item.product.sale_price|total_cost:item.quantity|intcomma|currency }}</h5>
-                                            </div>
-                                            <div class="level-right">
-                                                <form action="{% url "microstore:remove_cart_item" %}" method="post" class="level-item">
-                                                {% csrf_token %}
-                                                <input type="hidden" name="pk" value="{{ item.product.pk }}">
-                                                <button type="submit" class="button is-white is-small">[x] Delete</button>
-                                                </form>
-                                            </div>
-                                        </div>
+                                    </div>
+                                    <div class="column is-2">
+                                        <p class="is-size-7">Quantity: {{ item.quantity }}</p>
+                                        <h5 class="">Total: {{ item.product.sale_price|total_cost:item.quantity|intcomma|currency }}</h5>
+                                        <hr>
+                                        <a href="{% url "microstore:remove_cart_item" id=item.id %}" class="has-text-danger is-size-7 has-text-weight-bold">Delete item</a>
                                     </div>
                                 </div>
                             {% endfor %}
+                            <!-- <hr> -->
                             <div class="level is-mobile">
                                 <div class="level-left">
-                                    <a href="{% url 'microstore:all_products' %}" class="has-text-info">
-                                        <h3 class="title is-6">Continue shopping</h3>
+                                    <a href="{% url 'microstore:all_products' %}">
+                                        <h3 class="title is-6 has-text-info">Continue shopping</h3>
                                     </a>
                                 </div>
                                 <div class="level-right">
-                                    <a href="{% url 'microstore:checkout' %}" class="button is-primary is-fullwidth"><h4 class="title is-6" style="color:#fff">Checkout @{{ total|intcomma|currency }}</h4></a>
+                                    <a href="{% url 'microstore:checkout' %}" class="button is-primary is-medium is-fullwidth"><h4 class="title is-6" style="color:#fff">Checkout @{{ total|intcomma|currency }}</h4></a>
                                 </div>
                             </div>
                         {% else %}
