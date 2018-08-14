@@ -172,6 +172,7 @@ class Order(models.Model):
     phone = models.CharField(max_length=64, null=True)
     additional_notes = models.TextField(max_length=1024, null=True, blank=True)
     transaction_reference = models.CharField(max_length=128, blank=True, null=True)
+    shipping_cost = models.DecimalField(max_digits=12, decimal_places=2, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def address(self):

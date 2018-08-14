@@ -10,17 +10,17 @@
             <div class="columns is-centered">
                 <div class="column is-8">
                     <div class="has-text-centered">
-                        <h2 class="title is-3">Thank you {{ order.user.first_name }} for your order</h2>
-                        <p>Please click pay now to make payment</p>
+                        <h2 class="title is-4">Thank you {{ order.user.first_name }} for shopping with us</h2>
+                        <p>Just one more step!</p>
                     </div>
                     <hr>
                     {% if order.cart %}
                         <div class="box">
                             <div class="columns">
                                 <div class="column">
-                                    <p class="text-is-uppercase is-size-7">Ship to</p>
+                                    <p class="header-title">Ship to</p>
                                     <h4 class="title is-5 is-marginless">{{ order.fullname }}</h4>
-                                    <p>{{ order.address }}</p>
+                                    <p class="is-marginless">{{ order.address }}</p>
                                     <p>{{ order.phone }}</p>
                                 </div>
                                 <div class="column has-text-right">
@@ -32,27 +32,31 @@
                                     <tr>
                                         <th>Item</th>
                                         <th class="has-text-right">Qty</th>
-                                        <th class="has-text-right">Cost</th>
+                                        <th class="has-text-right">Total Cost</th>
                                     </tr>
                                 </thead>
                                 {% for item in items %}
                                     <tr>
                                         <td>
                                             {{ item.product.title }}
+                                            <div class="help has-text-danger has-text-weight-bold">
+                                                {{ item.product.sale_price|intcomma|currency }}
+                                            </div>
                                         </td>
                                         <td class="has-text-right">
                                             {{ item.quantity }}
                                         </td>
                                         <td class="has-text-right">
-                                            <div>{{ item.product.sale_price|intcomma|currency }}</div>
-                                            <span class="help">
-                                                <del>{{ item.product.regular_price|intcomma|currency }}</del>
-                                            </span>
+                                            <div>{{ item.product.sale_price|total_cost:item.quantity|intcomma|currency }}</div>
                                         </td>
                                     </tr>
                                 {% endfor %}
                                 <!-- Display total and buy now button -->
-                                <tr>
+                                <tr class="has-text-weight-bold">
+                                    <td colspan="2" class="has-text-right">Shipping</td>
+                                    <td class="has-text-right">{{ shipping_cost|intcomma|currency }}</td>
+                                </tr>
+                                <tr style="border-top: 2px double #eee">
                                     <td colspan="2" class="has-text-right">
                                         <h4 class="title is-5">Total:</h4>
                                     </td>
@@ -64,7 +68,7 @@
                                     <td colspan="3">
                                         {% csrf_token %}
                                         <input type="hidden" name="order_id" value="{{ order.uuid }}">
-                                        <button type="submit" class="button is-medium is-danger is-fullwidth">Pay now {{ total|intcomma|currency }}</button>
+                                        <button type="submit" class="button is-medium is-primary is-fullwidth">Pay now {{ total|intcomma|currency }}</button>
                                     </td>
                                 </tr>
                             </table>

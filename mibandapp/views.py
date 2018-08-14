@@ -5,7 +5,7 @@ from django.urls import reverse_lazy
 from django.shortcuts import render, reverse, redirect, render_to_response
 from django.views.generic import TemplateView, View, CreateView, DetailView, ListView, FormView, UpdateView
 from django.db.models import Sum
-from mibandapp.models import Product, Cart, Order, Item, ShippingAddress, Payment, Image, ProductFeature, ProductLike, ProductNotification, ProductSlider, ProductImage, Brand
+from mibandapp.models import Product, Cart, Order, Item, ShippingAddress, Payment, Image, ProductFeature, ProductLike, ProductNotification, ProductSlider, ProductImage, Brand, ShippingZone, State
 from datetime import datetime
 from django.contrib import messages
 from django.contrib.auth.models import User
@@ -205,7 +205,8 @@ class PaymentView(TemplateView):
             self.order = Order.objects.get(uuid__exact=kwargs['order'])
             items = Item.objects.filter(cart=self.order.cart)
             total = sum( [item.product.sale_price * item.quantity for item in items] )
-            return render(request, self.template_name, {'order': self.order, 'total': total, 'items': items})
+            total += self.order.shipping_cost
+            return render(request, self.template_name, { 'order': self.order, 'total': total, 'items': items, 'shipping_cost': self.order.shipping_cost })
         except Exception as ex:
             print(ex)
             return HttpResponseRedirect('/')
@@ -298,6 +299,9 @@ class CheckoutTemplateView(TemplateView):
             last_name = form.cleaned_data['last_name']
             password = User.objects.make_random_password()
             username = slugify(email)
+            shipping_cost = form.cleaned_data['state'].shipping_zone.kg_cost
+            total += shipping_cost
+
             # Check if the user is authenticated
             if request.user.is_authenticated:
                 self.user = request.user
@@ -331,6 +335,7 @@ class CheckoutTemplateView(TemplateView):
                 order = form.save(commit=False)
                 order.cart = cart
                 order.total = total
+                order.shipping_cost = shipping_cost
                 order.user = self.user
                 order.save()
 
@@ -714,3 +719,13 @@ class PrivacyPolicyPageView(TemplateView):
 
 class ContactUsPageView(TemplateView):
     template_name = 'pages/contact.html'
+
+class ShippingRateJsonView(View):
+    def get(self, request, *args, **kwargs):
+        state = State.objects.get(pk=self.kwargs['id'])
+        zone = ShippingZone.objects.get(pk=state.shipping_zone.id)
+        data = {
+            'name': zone.name,
+            'cost': zone.kg_cost
+        }
+        return JsonResponse(data)

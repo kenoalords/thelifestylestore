@@ -748,6 +748,51 @@
         $('#newsletter-lname').val('')
     }
 
+    // Get shipping rate
+    var has_shipping = false;
+    if ( $('#checkout-form').length > 0 ){
+        var form = $('#checkout-form');
+
+        $('body').on('change', '#id_state', function(e){
+            getShippingCost()
+        });
+        form.on('change', function(e){
+            if ( has_shipping ){
+                form.find('#submit').removeAttr('disabled');
+            } else {
+                form.find('#submit').attr('disabled', 'disabled');
+            }
+        });
+        form.trigger('change');
+    }
+
+    function getShippingCost(){
+        var form = $('#checkout-form');
+        var total = 0;
+        var state_id = parseInt( form.find('#id_state').val() );
+        form.find('#submit').addClass('is-loading');
+        if ( !isNaN(state_id)){
+            form.find('.cost').each(function(index){
+                total += parseInt( $(this).data('cost') * $(this).data('qty') )
+            })
+            $.get('/shipping/' + state_id, function(data){
+                var cost = parseInt(data.cost)
+                form.find('#shipping_cost').html(cost.toLocaleString('en-UK', {style: 'currency', currency: 'NGN', currencyDisplay: 'code'}))
+                total = total + parseInt( data.cost )
+                form.find('#total').html( total.toLocaleString('en-UK', {style: 'currency', currency: 'NGN', currencyDisplay: 'symbol'}) )
+                has_shipping = true;
+                form.find('#submit').removeClass('is-loading');
+                form.trigger('change');
+            }).fail(function(err){
+                form.find('#submit').removeClass('is-loading');
+            });
+        } else {
+            has_shipping = false;
+            form.find('#submit').removeClass('is-loading');
+            form.trigger('change');
+        }
+    }
+
 })(window, document, jQuery)
 
 // if ( 'serviceWorker' in navigator ){

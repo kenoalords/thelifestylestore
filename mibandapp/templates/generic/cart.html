@@ -13,26 +13,30 @@
                         {% if items.count > 0 %}
                             <div class="level is-mobile">
                                 <div class="level-left">
-                                    <h2 class="title is-5 level-item">Cart</h2>
+                                    <h2 class="title is-5 level-item">
+                                        <span class="icon"><i class="fas fa-shopping-cart"></i></span>
+                                        <span style="display: inline-block;margin-left:5px">My cart</span>
+                                    </h2>
                                 </div>
                                 <div class="level-right">
-                                    <a href="{% url 'microstore:all_products' %}">
-                                        <h3 class="title is-6 has-text-info">Continue shopping</h3>
+                                    <a href="{% url 'microstore:all_products' %}" class="button is-white">
+                                        <span>Continue shopping</span>
+                                        <span class="icon"><i class="fas fa-long-arrow-alt-right"></i></span>
                                     </a>
                                 </div>
                             </div>
 
                             <hr>
                             {% for item in items %}
-                                <div class="columns single-cart-product">
-                                    <div class="column is-3">
+                                <div class="columns single-cart-product is-mobile">
+                                    <div class="column is-one-quarter-mobile is-one-quarter-desktop">
                                         <figure class="image">
                                             <img src="{{ item.product.get_image }}" alt="{{ product.title }}">
                                         </figure>
                                     </div>
-                                    <div class="column is-7">
+                                    <div class="column is-half-mobile is-half-desktop">
                                         <a href="{% url 'microstore:product' id=item.product.id slug=item.product.slug %}">
-                                            <h2 class="title is-4" style="margin-bottom: 1em">{{ item.product.title }}</h2>
+                                            <h2 class="title is-5 is-size-6-mobile" style="margin-bottom: 1em">{{ item.product.title }}</h2>
                                         </a>
                                         {% if item.product.regular_price %}
                                             <div class="regular_price is-marginless">
@@ -41,19 +45,20 @@
                                         {% endif %}
                                         <h3 class="title is-5">{{ item.product.sale_price|intcomma|currency }}</h3>
                                     </div>
-                                    <div class="column is-2">
-                                        <p class="is-size-7">Quantity: {{ item.quantity }}</p>
-                                        <h5 class="">Total: {{ item.product.sale_price|total_cost:item.quantity|intcomma|currency }}</h5>
-                                        <hr>
+                                    <div class="column is-one-quarter-mobile is-one-quarter-desktop">
+                                        <span class="header-title">Qty: {{ item.quantity }}</span>
+                                        <h4 class="title is-5 is-size-6-mobile">{{ item.product.sale_price|total_cost:item.quantity|intcomma|currency }}</h4>
+                                        <!-- <hr> -->
                                         <a href="{% url "microstore:remove_cart_item" id=item.id %}" class="has-text-danger is-size-7 has-text-weight-bold">Delete item</a>
                                     </div>
                                 </div>
                             {% endfor %}
                             <!-- <hr> -->
                             <div class="level is-mobile">
-                                <div class="level-left">
-                                    <a href="{% url 'microstore:all_products' %}">
-                                        <h3 class="title is-6 has-text-info">Continue shopping</h3>
+                                <div class="level-left is-hidden-mobile">
+                                    <a href="{% url 'microstore:all_products' %}" class="button is-white">
+                                        <span class="icon"><i class="fas fa-long-arrow-alt-left"></i></span>
+                                        <span>Continue shopping</span>
                                     </a>
                                 </div>
                                 <div class="level-right">

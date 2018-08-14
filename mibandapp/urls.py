@@ -2,7 +2,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path, include
 from django.conf.urls import url
-from mibandapp.views import IndexView, CartView, DeleteCartItemView, CheckoutTemplateView, PaymentView, PaystackPaymentGateway, PaystackPaymentConfirm, PaymentConfirmation, PaymentConfirmationFailed, ProductDetailView, ProductLikeAdd, ProductSubscribeAdd, ProductsAll, AboutUsPageView, PrivacyPolicyPageView, ContactUsPageView, MyOrderView
+from mibandapp.views import IndexView, CartView, DeleteCartItemView, CheckoutTemplateView, PaymentView, PaystackPaymentGateway, PaystackPaymentConfirm, PaymentConfirmation, PaymentConfirmationFailed, ProductDetailView, ProductLikeAdd, ProductSubscribeAdd, ProductsAll, AboutUsPageView, PrivacyPolicyPageView, ContactUsPageView, MyOrderView, ShippingRateJsonView
 
 
 app_name = 'microstore'
@@ -26,4 +26,5 @@ urlpatterns = [
     path('product/<id>/like/', ProductLikeAdd.as_view(), name="like_product"),
     path('product/<id>/subscribe/', ProductSubscribeAdd.as_view(), name="subscribe_product"),
     path('product/<id>/<slug>/', ProductDetailView.as_view(), name="product"),
+    path('shipping/<int:id>/', ShippingRateJsonView.as_view(), name="shipping_rate"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
