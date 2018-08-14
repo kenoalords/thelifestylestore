@@ -36,6 +36,7 @@
                         {% else %}
                             <li><a href="{% url 'microstore:my_orders' %}">My Orders</a></li>
                         {% endif %}
+                    <!-- <li><a href="{% url 'microstore:profile' %}">My Profile</a></li> -->
                     <li><a href="{% url 'logout' %}">Logout</a></li>
                 {% else %}
                     <li><a href="{% url 'login' %}">Login</a></li>
@@ -45,8 +46,9 @@
                 <li><a href="{% url 'microstore:contact' %}">Contact us</a></li>
             </ul>
         </nav>
+        {% include "./parts/navbar/app_base_navbar.html" %}
         <div id="site-wrapper">
-            {% include "./parts/navbar/app_base_navbar.html" %}
+
             <!-- Main content area -->
             {% block content %}
             {% endblock content %}

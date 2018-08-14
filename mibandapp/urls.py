@@ -2,7 +2,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path, include
 from django.conf.urls import url
-from mibandapp.views import IndexView, CartView, DeleteCartItemView, CheckoutTemplateView, PaymentView, PaystackPaymentGateway, PaystackPaymentConfirm, PaymentConfirmation, PaymentConfirmationFailed, ProductDetailView, ProductLikeAdd, ProductSubscribeAdd, ProductsAll, AboutUsPageView, PrivacyPolicyPageView, ContactUsPageView, MyOrderView, ShippingRateJsonView
+from mibandapp.views import IndexView, CartView, DeleteCartItemView, CheckoutTemplateView, PaymentView, PaystackPaymentGateway, PaystackPaymentConfirm, PaymentConfirmation, PaymentConfirmationFailed, ProductDetailView, ProductLikeAdd, ProductSubscribeAdd, ProductsAll, AboutUsPageView, PrivacyPolicyPageView, ContactUsPageView, MyOrderView, ShippingRateJsonView, ProfileView
 
 
 app_name = 'microstore'
@@ -14,6 +14,7 @@ urlpatterns = [
     path('contact/', ContactUsPageView.as_view(), name="contact"),
     path('cart/', CartView.as_view(), name="cart"),
     path('orders/', MyOrderView.as_view(), name="my_orders"),
+    path('profile/', ProfileView.as_view(), name="profile"),
     path('cart/<id>/delete', DeleteCartItemView.as_view(), name="remove_cart_item"),
     path('checkout/', CheckoutTemplateView.as_view(), name="checkout"),
     path('checkout/<order>/pay/', PaystackPaymentGateway.as_view(), name='paystack'),

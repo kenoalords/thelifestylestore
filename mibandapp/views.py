@@ -48,6 +48,10 @@ class ProductsAll(ListView):
     model = Product
     queryset = Product.active.all()
 
+class ProfileView(LoginRequiredMixin,TemplateView):
+    template_name = './parts/account/my_account.html'
+
+
 class CartView(TemplateView):
     template_name = 'generic/cart.html'
 

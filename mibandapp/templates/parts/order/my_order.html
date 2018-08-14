@@ -7,7 +7,7 @@
     <div class="hero-body">
         <div class="container">
             <h1 class="title is-3">My Orders</h1>
-            <hr>
+            {% include '../navbar/profile_navbar.html' %}
             {% if orders %}
                 {% for order in orders %}
                     <div class="columns my-order">
@@ -16,6 +16,7 @@
                             <h4 class="title is-5 is-marginless">{{ order.fullname }}</h4>
                             <p class="is-marginless">{{ order.address }}</p>
                             <p>{{ order.phone }}</p>
+                            <span class="header-title" style="color:#111">{{ order.created_at|date:"D d M Y" }}</span>
                         </div>
                         <div class="column is-expanded">
                             <span class="header-title">{{ order.items.count }} Item(s)</span>
@@ -32,7 +33,7 @@
                                                 <a href="{% url 'microstore:product' id=item.product.id slug=item.product.slug %}" style="color:#111" target="_blank">{{ item.product.title }}</a>
                                             </h4>
                                             <p>
-                                                <span class="has-text-danger has-text-weight-bold is-size-7">{{ item.product.sale_price|currency|intcomma }}</span>
+                                                <span class="has-text-danger has-text-weight-bold is-size-7">{{ item.product.sale_price|intcomma|currency }}</span>
                                                 <span class="has-text-weight-bold is-size-7">Qty: {{ item.quantity }}</span>
                                             </p>
                                         </div>
@@ -47,7 +48,7 @@
                                     <span class="button is-success is-small"><span class="icon"><i class="fas fa-check"></i></span> <span>Payment successful</span></span>
                                 {% else %}
                                     <a href="{% url 'microstore:pay' order=order.uuid %}" class="button is-small is-primary">
-                                        <span class="icon"><i class="fas fa-exclamation-triangle"></i></span> <span>Make payment</span>
+                                        <span class="icon"><i class="fas fa-exclamation-triangle"></i></span> <span>Payment pending</span>
                                     </a>
                                 {% endif %}
                             </div>
