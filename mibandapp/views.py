@@ -27,11 +27,13 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.contrib.sites.shortcuts import get_current_site
 from mibandapp.tasks import send_create_account_email, send_order_email, send_payment_recieved_email, send_create_account_email_checkout
+import decimal
 
 import requests
 import json
 # Create your views here.
 
+decimal.Context(prec=2, rounding=decimal.ROUND_UP)
 # Index View
 class IndexView(TemplateView):
     template_name = 'generic/index.html'
@@ -145,14 +147,33 @@ class ProductLikeAdd(View):
             try:
                 product = Product.objects.get(pk=product_id)
                 cookie_id = self.request.get_signed_cookie('_t')
-                like = ProductLike.objects.create(product=product, cookie_id=cookie_id)
-                like.save()
-                if self.request.is_ajax():
-                    count = ProductLike.objects.filter(product=product).count()
-                    return JsonResponse({ 'status': True, 'count': count  })
+                check_product_like = ProductLike.objects.filter(product=product, cookie_id=cookie_id)
+                if check_product_like:
+                    if request.user.is_authenticated and request.user.is_superuser:
+                        like = ProductLike.objects.create(product=product, cookie_id=cookie_id)
+                        like.save()
+                        if self.request.is_ajax():
+                            count = ProductLike.objects.filter(product=product).count()
+                            return JsonResponse({ 'status': True, 'count': count, 'already_liked': False  })
+                        else:
+                            messages.success(request, 'You liked %s!' % product.title)
+                            return HttpResponseRedirect(request.META['HTTP_REFERER'])
+                    else:
+                        if self.request.is_ajax():
+                            count = ProductLike.objects.filter(product=product).count()
+                            return JsonResponse({ 'status': False, 'count': count, 'already_liked': True  })
+                        else:
+                            messages.success(request, 'You liked %s!' % product.title)
+                            return HttpResponseRedirect(request.META['HTTP_REFERER'])
                 else:
-                    messages.success(request, 'You liked %s!' % product.title)
-                    return HttpResponseRedirect(request.META['HTTP_REFERER'])
+                    like = ProductLike.objects.create(product=product, cookie_id=cookie_id)
+                    like.save()
+                    if self.request.is_ajax():
+                        count = ProductLike.objects.filter(product=product).count()
+                        return JsonResponse({ 'status': True, 'count': count, 'already_liked': False })
+                    else:
+                        messages.success(request, 'You liked %s!' % product.title)
+                        return HttpResponseRedirect(request.META['HTTP_REFERER'])
             except Exception as ex:
                 print(ex)
                 if self.request.is_ajax():
@@ -303,8 +324,9 @@ class CheckoutTemplateView(TemplateView):
             last_name = form.cleaned_data['last_name']
             password = User.objects.make_random_password()
             username = slugify(email)
-            shipping_cost = form.cleaned_data['state'].shipping_zone.kg_cost
-            total += shipping_cost
+            shipping_cost = calculate_shipping_cost(request, form.cleaned_data['state'].id, cart_id)
+            total = decimal.Decimal(shipping_cost['total'])
+
 
             # Check if the user is authenticated
             if request.user.is_authenticated:
@@ -339,7 +361,7 @@ class CheckoutTemplateView(TemplateView):
                 order = form.save(commit=False)
                 order.cart = cart
                 order.total = total
-                order.shipping_cost = shipping_cost
+                order.shipping_cost = shipping_cost['shipping_cost']
                 order.user = self.user
                 order.save()
 
@@ -368,6 +390,34 @@ class CheckoutTemplateView(TemplateView):
         else:
             # Form not valid
             return render(request, self.template_name, {'cart': items, 'total': total, 'form': form})
+
+class GetShippingCost(View):
+    def get(self, request, *args, **kwargs):
+        try:
+            self.cart_id = request.get_signed_cookie('cart_id')
+        except Exception as ex:
+            if request.is_ajax():
+                return JsonResponse({'status': False, 'message': 'No cart found!'})
+            else:
+                return HttpResponseRedirect(reverse('microstore:checkout'))
+        # Get cart items
+        return calculate_shipping_cost(request, self.kwargs['state'], self.cart_id)
+
+
+def calculate_shipping_cost(request, state_id, cart_id):
+    state = State.objects.get(id=state_id)
+    cart = Cart.objects.get(cart_id__exact=cart_id)
+    items = Item.objects.filter(cart=cart)
+    if items:
+        total_weight = [item.product.weight for item in items]
+        total_cost = [item.quantity * item.product.sale_price for item in items]
+        weight = sum(total_weight) - decimal.Decimal(0.5)
+        total = (weight/decimal.Decimal(0.5) * state.shipping_zone.additional_kg_cost) + state.shipping_zone.kg_cost
+        total_due = sum(total_cost) + total
+        if request.is_ajax():
+            return JsonResponse({ 'status': True, 'shipping_cost': total, 'total': total_due })
+        else:
+            return { 'shipping_cost': decimal.Decimal(total), 'total': total_due }
 
 class CustomLogoutView(LogoutView):
     next_page = '/'
@@ -733,3 +783,6 @@ class ShippingRateJsonView(View):
             'cost': zone.kg_cost
         }
         return JsonResponse(data)
+
+class ShippingReturnsPageView(TemplateView):
+    template_name = 'pages/shipping.html'

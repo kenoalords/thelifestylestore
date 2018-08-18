@@ -2,7 +2,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path, include
 from django.conf.urls import url
-from mibandapp.views import IndexView, CartView, DeleteCartItemView, CheckoutTemplateView, PaymentView, PaystackPaymentGateway, PaystackPaymentConfirm, PaymentConfirmation, PaymentConfirmationFailed, ProductDetailView, ProductLikeAdd, ProductSubscribeAdd, ProductsAll, AboutUsPageView, PrivacyPolicyPageView, ContactUsPageView, MyOrderView, ShippingRateJsonView, ProfileView
+from mibandapp.views import IndexView, CartView, DeleteCartItemView, CheckoutTemplateView, PaymentView, PaystackPaymentGateway, PaystackPaymentConfirm, PaymentConfirmation, PaymentConfirmationFailed, ProductDetailView, ProductLikeAdd, ProductSubscribeAdd, ProductsAll, AboutUsPageView, PrivacyPolicyPageView, ContactUsPageView, MyOrderView, ShippingRateJsonView, ProfileView, GetShippingCost, ShippingReturnsPageView
 
 
 app_name = 'microstore'
@@ -12,6 +12,7 @@ urlpatterns = [
     path('about-us/', AboutUsPageView.as_view(), name="about_us"),
     path('privacy/', PrivacyPolicyPageView.as_view(), name="privacy"),
     path('contact/', ContactUsPageView.as_view(), name="contact"),
+    path('shipping-returns/', ShippingReturnsPageView.as_view(), name="shipping_returns"),
     path('cart/', CartView.as_view(), name="cart"),
     path('orders/', MyOrderView.as_view(), name="my_orders"),
     path('profile/', ProfileView.as_view(), name="profile"),
@@ -27,5 +28,6 @@ urlpatterns = [
     path('product/<id>/like/', ProductLikeAdd.as_view(), name="like_product"),
     path('product/<id>/subscribe/', ProductSubscribeAdd.as_view(), name="subscribe_product"),
     path('product/<id>/<slug>/', ProductDetailView.as_view(), name="product"),
-    path('shipping/<int:id>/', ShippingRateJsonView.as_view(), name="shipping_rate"),
+    # path('shipping/<int:id>/', ShippingRateJsonView.as_view(), name="shipping_rate"),
+    path('shipping/<int:state>/', GetShippingCost.as_view(), name="shipping_rate"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

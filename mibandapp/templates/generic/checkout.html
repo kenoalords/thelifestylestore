@@ -7,7 +7,6 @@
 <div class="hero is-medium">
     <div class="hero-body">
         <div class="container">
-            <h2 class="title">Checkout</h2>
             {% if form.errors %}
                 <div class="notification is-danger">
                     There are some errors in your form. Please correct them and proceed
@@ -17,6 +16,7 @@
                 <div class="column">
                     {{ form.non_field_errors }}
                     <div class="field">
+                        <h2 class="title">Checkout</h2>
                         <h4 class="title is-6">Contact details</h4>
                     </div>
                     <div class="field is-grouped">
@@ -87,9 +87,9 @@
                     </div>
                 </div>
                 <div class="column">
-                    <div class="box">
-                        <h4 class="title is-4">My Cart</h4>
-                        <table class="table is-fullwidth is-borderless-table">
+                    <div class="">
+                        <h2 class="title">My Cart</h2>
+                        <table class="table is-fullwidth">
                             <thead>
                                 <tr>
                                     <th>Item</th>
@@ -98,19 +98,32 @@
                                 </tr>
                             </thead>
                             {% for item in cart %}
-                                <tr>
-                                    <td>{{ item.product.title }}</td>
+                                <tr  v-align="middle">
+                                    <td>
+                                        <h4 class="title is-6 is-marginless">{{ item.product.title }}</h4>
+                                        <div class="regular_price is-marginless">
+                                            <del>{{ item.product.regular_price|intcomma|currency }}</del> <span class="save"> Save {{ item.product.regular_price|savings:item.product.sale_price|intcomma|currency }}</span>
+                                        </div>
+                                        <h4 class="title is-6 sale_price">{{ item.product.sale_price|intcomma|currency }}</h4>
+                                    </td>
                                     <td>{{ item.quantity }}</td>
-                                    <td class="has-text-right cost" data-cost="{{ item.product.sale_price }}" data-qty="{{ item.quantity }}">{{ item.product.sale_price|intcomma|currency }}</td>
+                                    <td class="has-text-right has-text-weight-bold cost" data-cost="{{ item.product.sale_price }}" data-qty="{{ item.quantity }}">{{ item.product.sale_price|total_cost:item.quantity|intcomma|currency }}</td>
                                 </tr>
                             {% endfor %}
-                            <tr>
-                                <td>Shipping</td>
-                                <td class="has-text-right" id="shipping_cost" colspan="2">0.00</td>
+                            <tr v-align="middle">
+                                <td class="has-text-right has-text-weight-bold no-border">
+                                    <h4 class="title is-6">Sub total</h4></td>
+                                <td class="has-text-right has-text-weight-bold no-border" colspan="2">{{ total|intcomma|currency }}</td>
+                            </tr>
+                            <tr v-align="middle">
+                                <td class="has-text-right has-text-weight-bold no-border">
+                                    <h4 class="title is-6">Shipping</h4></td>
+                                <td class="has-text-right has-text-weight-bold no-border" id="shipping_cost" colspan="2">0.00</td>
                             </tr>
                             <tr>
-                                <td align="right"><b>Total</b></td>
-                                <td class="has-text-right has-text-weight-bold" id="total" colspan="2">{{ total|intcomma|currency }}</td>
+                                <td class="has-text-right has-text-weight-bold no-border">
+                                    <h4 class="title is-6">Total</h4></td>
+                                <td class="has-text-right has-text-weight-bold no-border" id="total" colspan="2">{{ total|intcomma|currency }}</td>
                             </tr>
                             <tr>
                                 <td colspan="3">

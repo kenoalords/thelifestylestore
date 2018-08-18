@@ -223,9 +223,10 @@ class ShippingAddress(models.Model):
 class ShippingZone(models.Model):
     name = models.CharField(max_length=12)
     kg_cost = models.DecimalField(max_digits=12, decimal_places=2)
+    additional_kg_cost = models.DecimalField(max_digits=12, decimal_places=2)
 
     def __str__(self):
-        return self.name
+        return '%s - %s' % (self.name, self.kg_cost) 
 
 class Country(models.Model):
     name = models.CharField(max_length=64)
