@@ -1,7 +1,7 @@
 {% extends '../app_base.html' %}
 
 {% block content %}
-
+{% load humanize currency %}
 <div class="hero is-medium">
     <div class="hero-body">
         <div class="container">
@@ -12,21 +12,31 @@
                             <h2 class="title is-2">Hooray! Your order is now complete</h2>
                             <p>We are excited about your order and we know you are too. We will ship your order within 24hrs.</p>
                             <hr>
-                            <h4 class="title is-3">Order Details</h4>
-                            <div class="columns">
+                            <h4 class="title is-5">Order Details</h4>
+                            <div class="columns is-mobile ">
                                 <div class="column">
-                                    <p class="text-is-uppercase is-size-6 has-text-weight-bold">We are shipping to:</p>
+                                    <span class="header-title">We are shipping to:</span>
                                     <h4 class="title is-5 is-marginless">{{ order.fullname }}</h4>
                                     <p class="is-marginless">{{ order.address }}</p>
                                     <p>{{ order.phone }}</p>
-                                    <h4 class="title is-5">Transaction Reference: <u>{{ order.transaction_reference }}</u></h4>
+                                </div>
+                                <div class="column has-text-right">
+                                    <span class="header-title">
+                                        Transaction Reference
+                                    </span>
+                                    <h4 class="title is-5">{{ order.transaction_reference }}</h4>
                                 </div>
                             </div>
-                            <table class="table is-striped is-bordered">
-                                <tr>
-
-                                </tr>
-                            </table>
+                            {% if items %}
+                                {% if items.count > 0 %}
+                                    {% include '../parts/products/items.html' with items=items %}
+                                    <div>
+                                        <p>
+                                            If you have any questions about this order, please send us a mail at <a href="mailto:hello@thelifestylestore.com.ng">hello@thelifestylestore.com.ng</a> or call <a href="tel:09022422022">090 2242 2022</a>
+                                        </p>
+                                    </div>
+                                {% endif %}
+                            {% endif %}
                         {% else %}
                         {% endif %}
                     </div>

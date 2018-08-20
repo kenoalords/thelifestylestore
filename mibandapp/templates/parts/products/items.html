@@ -1,0 +1,30 @@
+{% load humanize currency %}
+{% for item in items %}
+    <div class="columns single-cart-product is-mobile align-center">
+        <div class="column is-2 is-2-mobile">
+            <figure class="image">
+                <img src="{{ item.product.get_image }}" alt="{{ product.title }}">
+            </figure>
+        </div>
+        <div class="column is-6">
+            <a href="{% url 'microstore:product' id=item.product.id slug=item.product.slug %}">
+                <h2 class="title is-6 is-size-6-mobile is-marginless" style="margin-bottom: 1em">{{ item.product.title }}</h2>
+            </a>
+            {% if item.product.regular_price %}
+                <div class="regular_price is-marginless">
+                    <del>{{ item.product.regular_price|intcomma|currency }}</del> <span class="save"> Save {{ item.product.regular_price|savings:item.product.sale_price|intcomma|currency }}</span>
+                </div>
+            {% endif %}
+            <h3 class="title is-6">{{ item.product.sale_price|intcomma|currency }}</h3>
+
+        </div>
+        <div class="column is-4 has-text-right">
+            <span class="header-title">Qty: {{ item.quantity }}</span>
+            <h4 class="title is-5 is-size-6-mobile">{{ item.product.sale_price|total_cost:item.quantity|intcomma|currency }}</h4>
+            <!-- <hr> -->
+            {% if show_delete %}
+                <a href="{% url "microstore:remove_cart_item" id=item.id %}" class="has-text-danger is-size-7 has-text-weight-bold">Delete item</a>
+            {% endif %}
+        </div>
+    </div>
+{% endfor %}

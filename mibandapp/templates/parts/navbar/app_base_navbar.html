@@ -1,14 +1,14 @@
 {% load static %}
 
 <header id="header-wrapper">
-<header id="topbar" class="hero is-dark is-small is-hidden-mobile">
+<header id="topbar" class="hero is-dark is-small">
     <nav class="hero-body">
         <div class="container">
             <div class="columns">
-                <div class="column is-hidden-mobile">
-                    <p>Free shipping within Lagos. <a href="{% url 'microstore:shipping_returns' %}"><u>Learn more</u></a></p>
+                <div class="column" id="free-shipping">
+                    <p><a href="{% url 'microstore:shipping_returns' %}">Free shipping within Lagos.</a></p>
                 </div>
-                <div class="column has-text-right">
+                <div class="column has-text-right is-hidden-mobile">
                     <ul class="menu">
                         <li><a href="tel:09022422022"><img src="{% static 'images/telephone.svg' %}" alt="Phone"> 234 090 2242 2022</a></li>
                         <li>

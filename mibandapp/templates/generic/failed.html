@@ -1,14 +1,40 @@
 {% extends '../app_base.html' %}
 
 {% block content %}
-
+{% load static %}
 <div class="hero is-medium">
     <div class="hero-body">
         <div class="container">
             <div class="columns is-centered">
                 <div class="column is-8">
-                    <div class="box">
-                        Thank you for your order
+                    <h1 class="title is-3 has-text-danger">Payment confirmation failed!</h1>
+                    <p>There was a problem confirming your payment. Please send a mail to <a href="mailto:hello@thelifestylestore.com.ng">hello@thelifestylestore.com.ng</a></p>
+                    <hr>
+                    <div class="columns is-mobile ">
+                        <div class="column">
+                            <span class="header-title">Ship to:</span>
+                            <h4 class="title is-5 is-marginless">{{ order.fullname }}</h4>
+                            <p class="is-marginless">{{ order.address }}</p>
+                            <p>{{ order.phone }}</p>
+                        </div>
+                        <div class="column has-text-right">
+                            <span class="header-title">
+                                Status
+                            </span>
+                            <h4 class="title is-5 has-text-danger">Failed</h4>
+                        </div>
+                    </div>
+                    <hr>
+                    {% if items %}
+                        {% include '../parts/products/items.html' with items=items %}
+                    {% endif %}
+
+                    <div class="paystack has-text-centered">
+                        <p><a href="{% url 'microstore:pay' order=order.uuid %}" class="button is-primary is-large is-fullwidth">Try again</a></p>
+
+                        <p><a href="https://paystack.com" target="_blank" rel="noopen">
+                            <img src="{% static 'images/paystack-cards.png' %}" alt="Secured by Paystack">
+                        </a></p>
                     </div>
                 </div>
             </div>

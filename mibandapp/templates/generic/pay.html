@@ -8,15 +8,15 @@
     <div class="hero-body">
         <div class="container">
             <div class="columns is-centered">
-                <div class="column is-10">
+                <div class="column is-8">
                     <div class="has-text-centered">
-                        <h2 class="title is-4">Thank you {{ order.user.first_name }} for shopping with us</h2>
+                        <h2 class="title is-3">Thank you {{ order.user.first_name }} for shopping with us</h2>
                         <p>Just one more step!</p>
                     </div>
                     <hr>
                     {% if order.cart %}
-                        <div class="box">
-                            <div class="columns">
+                        <div>
+                            <div class="columns is-mobile">
                                 <div class="column">
                                     <p class="header-title is-marginless">Ship to</p>
                                     <h4 class="title is-5 is-marginless">{{ order.fullname }}</h4>
@@ -27,73 +27,52 @@
                                     <h4 class="title is-5">Order No: {{ order.id }}</h4>
                                 </div>
                             </div>
-                            <table class="table is-fullwidth is-borderless-table">
-                                <thead>
-                                    <tr>
-                                        <th>Image</th>
-                                        <th>Item</th>
-                                        <th class="has-text-right">Qty</th>
-                                        <th class="has-text-right">Total Cost</th>
-                                    </tr>
-                                </thead>
-                                {% for item in items %}
-                                    <tr>
-                                        <td>
-                                            <figure class="image is-48x48">
-                                                <img src="{{ item.product.get_image }}" alt="{{ item.product.title }}">
-                                            </figure>
-                                        </td>
-                                        <td>
-                                            <h4 class="title is-6 is-marginless">{{ item.product.title }}</h4>
-                                            <div class="regular_price is-marginless">
-                                                <del>{{ item.product.regular_price|intcomma|currency }}</del> <span class="save"> Save {{ item.product.regular_price|savings:item.product.sale_price|intcomma|currency }}</span>
-                                            </div>
-                                            <h4 class="title is-6 sale_price">{{ item.product.sale_price|intcomma|currency }}</h4>
-                                        </td>
-                                        <td class="has-text-right has-text-weight-bold">
-                                            {{ item.quantity }}
-                                        </td>
-                                        <td class="has-text-right has-text-weight-bold">
-                                            <div>{{ item.product.sale_price|total_cost:item.quantity|intcomma|currency }}</div>
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                                <!-- Display total and buy now button -->
+                            <hr>
+                            {% include '../parts/products/items.html' with items=items %}
+                            <hr>
+                            <table class="table is-fullwidth is-borderless-table is-payment-table">
                                 <tr v-align="middle">
-                                    <td class="has-text-right has-text-weight-bold no-border" colspan="3">
+                                    <td class="has-text-right has-text-weight-bold no-border">
                                         <h4 class="title is-6">Sub Total</h4></td>
-                                    <td class="has-text-right has-text-weight-bold no-border" colspan="2">{{ total|intcomma|currency }}</td>
+                                    <td class="has-text-right has-text-weight-bold no-border">
+                                        <h4 class="title is-6">{{ total|intcomma|currency }}</td>
+                                    </td>
                                 </tr>
                                 <tr class="has-text-weight-bold">
-                                    <td colspan="3" class="has-text-right">
+                                    <td class="has-text-right">
                                         <h4 class="title is-6">Shipping</h4>
                                     </td>
-                                    <td class="has-text-right">{{ shipping_cost|intcomma|currency }}</td>
-                                </tr>
-                                <tr style="border-top: 2px double #eee">
-                                    <td colspan="3" class="has-text-right">
-                                        <h4 class="title is-5">Total</h4>
-                                    </td>
                                     <td class="has-text-right">
-                                        <h4 class="title is-5">{{ total|intcomma|currency }}</h4>
+                                        <h4 class="title is-6">{{ shipping_cost|intcomma|currency }}</h4>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td colspan="4">
+                                    <td class="has-text-right">
+                                        <h4 class="title is-4">Total</h4>
+                                    </td>
+                                    <td class="has-text-right">
+                                        <h4 class="title is-4">{{ total|intcomma|currency }}</h4>
+                                    </td>
+                                </tr>
+                                <tr><td colspan="2"></td></tr>
+                                <tr style="border-top: 3px solid #eee;">
+                                    <td></td>
+                                    <td style="padding-top:1em;">
                                         {% csrf_token %}
                                         <input type="hidden" name="order_id" value="{{ order.uuid }}">
-                                        <button type="submit" class="button is-medium is-primary is-fullwidth">Pay now {{ total|intcomma|currency }}</button>
+                                        <button type="submit" class="button is-medium is-primary is-fullwidth"><span>Pay now</span></button>
+
                                     </td>
                                 </tr>
                             </table>
                         </div>
-
                         <!-- Paystack logos -->
-                        <div class="paystack has-text-centered">
+                        <div class="paystack has-text-centered" style="margin-top:4em;">
                             <a href="https://paystack.com" target="_blank" rel="noopen">
                                 <img src="{% static 'images/paystack-cards.png' %}" alt="Secured by Paystack">
                             </a>
                         </div>
+
                     {% endif %}
 
                 </div>

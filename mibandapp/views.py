@@ -560,6 +560,9 @@ class PaystackPaymentGateway(View):
                 print(ex)
                 return redirect(request.META['HTTP_REFERER'])
 
+        def http_method_not_allowed(self, request):
+            return HttpResponseRedirect(reverse('microstore:index'))
+
 # Confirm payment from paystack
 class PaystackPaymentConfirm(View):
     def post(self, request, *args, **kwargs):
@@ -616,10 +619,25 @@ class PaymentConfirmation(DetailView):
     slug_url_kwarg = 'order'
     context_object_name = 'order'
 
-# Payment confirmation failed
-class PaymentConfirmationFailed(TemplateView):
-    template_name = 'generic/failed.html'
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        order = Order.objects.get(uuid__exact=self.object.uuid)
+        context['items'] = Item.objects.filter(cart_id__exact=order.cart_id)
+        return context
 
+# Payment confirmation failed
+class PaymentConfirmationFailed(DetailView):
+    template_name = 'generic/failed.html'
+    context_object_name = 'order'
+    slug_field = 'uuid'
+    slug_url_kwarg = 'order'
+    model = Order
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        order = Order.objects.get(uuid__exact=self.object.uuid)
+        context['items'] = Item.objects.filter(cart_id__exact=order.cart_id)
+        return context
 #
 # Product management
 #
