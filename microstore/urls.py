@@ -24,7 +24,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^sw(.*.js)$', TemplateView.as_view(template_name="sw.js", content_type="application/x-javascript"), name="sw"),
     url(r'^manifest(.*.json)$', TemplateView.as_view(template_name="manifest.json", content_type="application/json"), name="manifest"),
-    url(r'^offline(.*.html)$', TemplateView.as_view(template_name="offline.html", content_type="text/html"), name="offline"),
+    url(r'^offline(.*.html)$', TemplateView.as_view(template_name="parts/offline.html", content_type="text/html"), name="offline"),
     path('', include('mibandapp.urls')),
     path('accounts/login/', CustomLoginView.as_view(), name="login"),
     path('accounts/logout/', CustomLogoutView.as_view(), name="logout"),
