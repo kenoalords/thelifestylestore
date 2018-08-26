@@ -5,7 +5,7 @@ from django.urls import reverse_lazy
 from django.shortcuts import render, reverse, redirect, render_to_response
 from django.views.generic import TemplateView, View, CreateView, DetailView, ListView, FormView, UpdateView
 from django.db.models import Sum
-from mibandapp.models import Product, Cart, Order, Item, ShippingAddress, Payment, Image, ProductFeature, ProductLike, ProductNotification, ProductSlider, ProductImage, Brand, ShippingZone, State
+from mibandapp.models import Product, Cart, Order, Item, ShippingAddress, Payment, Image, ProductFeature, ProductLike, ProductNotification, ProductSlider, ProductImage, Brand, ShippingZone, State, PushNotification
 from datetime import datetime
 from django.contrib import messages
 from django.contrib.auth.models import User
@@ -26,8 +26,10 @@ from django.core.mail import EmailMessage, EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.contrib.sites.shortcuts import get_current_site
-from mibandapp.tasks import send_create_account_email, send_order_email, send_payment_recieved_email, send_create_account_email_checkout
+from mibandapp.tasks import send_create_account_email, send_order_email, send_payment_recieved_email, send_create_account_email_checkout, send_push_notification
 import decimal
+from django.core import serializers
+from pywebpush import webpush
 
 import requests
 import json
@@ -39,7 +41,7 @@ class IndexView(TemplateView):
     template_name = 'generic/index.html'
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['products'] = Product.featured.all()
+        context['products'] = Product.featured.all()[:6]
         context['sliders'] = ProductSlider.active.all()
         context['brands'] = Brand.objects.all()[:4]
         return context
@@ -656,7 +658,7 @@ class ProductDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['other_products'] = Product.objects.exclude(id=self.kwargs['id'])
+        context['other_products'] = Product.objects.filter(is_deleted=False).exclude(id=self.kwargs['id'])
         context['images'] = ProductImage.objects.filter(product=self.kwargs['id'])
         return context
 
@@ -804,3 +806,23 @@ class ShippingRateJsonView(View):
 
 class ShippingReturnsPageView(TemplateView):
     template_name = 'pages/shipping.html'
+
+
+class PushNotificationSubcription(View):
+    def post(self, request, *args, **kwargs):
+        try:
+            user = request.get_signed_cookie('_t')
+            sub = PushNotification.objects.create(user=user, subscription=request.POST['subscription'])
+            sub.save()
+            return JsonResponse({'status': True, 'subscribed': True})
+        except Exception as ex:
+            print(ex)
+            return JsonResponse({'status': False})
+
+class FetchPushNotificationSubscriptions(View):
+    def post(self, request, *args, **kwargs):
+        if not request.user.is_superuser:
+            return JsonResponse({'status': False})
+
+        send_push_notification.delay(request.POST['title'], request.POST['url'], request.POST['message'])
+        return JsonResponse({ 'status': True }, safe=False)

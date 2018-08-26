@@ -1,4 +1,4 @@
-let CACHE_STATIC = 'static-v4';
+let CACHE_STATIC = 'static-v5';
 let CACHE_DYNAMIC = 'dynamic-v2';
 
 self.addEventListener('install', (event) => {
@@ -79,4 +79,18 @@ self.addEventListener('fetch', (event) => {
             return cache.match('/offline.html');
         })
     );
+});
+
+// Listen for notification clicks
+self.addEventListener('notificationclick', function(e){
+    var notification = e.notification;
+    var action = e.action;
+});
+
+self.addEventListener('notificationclose', function(e){
+    var notification = e.notification;
+})
+
+self.addEventListener('push', function(event){
+    console.log(event);
 });

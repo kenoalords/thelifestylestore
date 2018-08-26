@@ -6,11 +6,11 @@
         <div class="container">
             <div class="columns">
                 <div class="column" id="free-shipping">
-                    <p><a href="{% url 'microstore:shipping_returns' %}">Free shipping within Lagos.</a></p>
+                    <p><a href="{% url 'microstore:shipping_returns' %}">Free shipping within Lagos. Learn more!</a></p>
                 </div>
                 <div class="column has-text-right is-hidden-mobile">
                     <ul class="menu">
-                        <li><a href="tel:09022422022"><img src="{% static 'images/telephone.svg' %}" alt="Phone"> 234 090 2242 2022</a></li>
+                        <li><a href="tel:09022422022"><img src="{% static 'images/telephone.svg' %}" alt="Phone"> 090 2242 2022</a></li>
                         <li>
                             {% if request.user.is_authenticated %}
                                 <div class="dropdown is-right is-hoverable">

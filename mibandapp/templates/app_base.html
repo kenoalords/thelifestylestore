@@ -19,6 +19,7 @@
         <meta property="og:url" content="{% block url %}{% endblock %}" />
         <meta property="og:site_name" content="TheLifestyleStore.com.ng" />
         <link rel="manifest" href="{% static 'manifest.json' %}">
+        <link rel="stylesheet" href="{% static 'js/bundle.css' %}">
     </head>
     <body class="is-fixed-navbar">
         <nav id="slide-in-navbar">
@@ -42,6 +43,7 @@
                 {% endif %}
                 <li class="divider"></li>
                 <li><a href="{% url 'microstore:contact' %}">Contact us</a></li>
+                <!-- <li><a href="#" class="button is-primary enable-notification">Enable notifications</a></li> -->
             </ul>
         </nav>
         {% include "./parts/navbar/app_base_navbar.html" %}
@@ -53,7 +55,6 @@
 
             {% include "./parts/app/footer.html" %}
         </div>
-        <link rel="stylesheet" href="{% static 'css/main.css' %}">
         <!--Start of Tawk.to Script-->
         <script type="text/javascript">
             var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
@@ -77,6 +78,6 @@
           gtag('config', 'UA-123763559-1');
         </script>
         <script defer async src="https://use.fontawesome.com/releases/v5.1.0/js/all.js"></script>
-        <script type="text/javascript" src="{% static 'js/main.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/bundle.min.js' %}"></script>
     </body>
 </html>

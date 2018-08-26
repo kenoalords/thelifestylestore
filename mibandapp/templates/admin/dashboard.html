@@ -44,15 +44,40 @@
                     </div>
                 </div>
             </div>
-            <section class="box">
+            <section>
                 {% if orders %}
                     {% include '../parts/order/order_table.html' with orders=orders %}
                 {% else %}
                     <h4 class="title has-text-danger is-6">You don't have any orders</h4>
                 {% endif %}
             </section>
+            <hr>
+            <a href="#" class="button is-danger" id="trigger-push-modal">Send Push Notification</a>
         </div>
     </div>
 </div>
-
+<div class="modal" id="push-modal">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+        <form action="{% url 'microstore:send_push_notification' %}" id="push-notification-form">
+            {% csrf_token %}
+            <div class="field">
+                <label for="title">Title</label>
+                <input type="text" name="title" id="title" class="input">
+            </div>
+            <div class="field">
+                <label for="title">Message</label>
+                <textarea name="message" id="message" rows="3" class="textarea"></textarea>
+            </div>
+            <div class="field">
+                <label for="url">Url</label>
+                <input type="text" name="url" id="url" class="input">
+            </div>
+            <div class="field">
+                <button type="submit" class="button is-fullwidth">Send Push Notification</button>
+            </div>
+        </form>
+    </div>
+    <button class="modal-close is-large" aria-label="close"></button>
+</div>
 {% endblock content %}

@@ -40,6 +40,11 @@ class Brand(models.Model):
     def __str__(self):
         return self.name
 
+class PushNotification(models.Model):
+    user = models.CharField(max_length=256)
+    subscription = models.CharField(max_length=564)
+    created_at = models.DateTimeField(auto_now_add=True)
+
 
 class Category(models.Model):
     name = models.CharField(max_length=64)
@@ -226,7 +231,7 @@ class ShippingZone(models.Model):
     additional_kg_cost = models.DecimalField(max_digits=12, decimal_places=2)
 
     def __str__(self):
-        return '%s - %s' % (self.name, self.kg_cost) 
+        return '%s - %s' % (self.name, self.kg_cost)
 
 class Country(models.Model):
     name = models.CharField(max_length=64)

@@ -17,7 +17,7 @@
                             {% for image in images %}
                                 <div>
                                     <figure class="image">
-                                        <img src="{{ image.image.url }}" alt="product.title" itemprop="image">
+                                        <img src="{{ image.image.url }}" alt="{{product.title}}" itemprop="image">
                                     </figure>
                                 </div>
                             {% endfor %}
@@ -25,7 +25,7 @@
                     {% endif %}
                 </div>
                 <div class="column is-7">
-                    <h1 class="title is-1 is-size-3-mobile" itemprop="name">{{ product.title }}</h1>
+                    <h1 class="title is-1 is-size-4-mobile" itemprop="name">{{ product.title }}</h1>
                     <p itemprop="description">{{ product.description|safe|linebreaksbr }}</p>
                     <p>
                         <meta itemprop="ratingValue" content="5">

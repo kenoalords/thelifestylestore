@@ -1,4 +1,5 @@
 node_modules
 package.json
 gulpfile.js
+webpack.config.js
 .DS_Store
