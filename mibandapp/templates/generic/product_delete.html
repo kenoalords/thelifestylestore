@@ -8,15 +8,15 @@
         <div class="container">
             <div class="columns is-centered">
                 <div class="column is-6">
-                    <h1 class="title is-3">Are you sure you want to remove this item from your shopping cart?</h1>
+                    <h1 class="title is-3 is-size-4-mobile has-text-danger">Are you sure you want to remove this item from your shopping cart?</h1>
                     <hr>
-                    <div class="columns">
+                    <div class="columns is-mobile">
                         <div class="column is-3">
                             <figure class="image"><img src="{{ item.product.get_image }}" alt="{{ item.product.title }}"></figure>
                         </div>
                         <div class="column is-9">
-                            <h3 class="title is-5">
-                                <a href="{% url 'microstore:product' id=item.product.id slug=item.product.slug %}">
+                            <h3 class="title is-6">
+                                <a href="{% url 'microstore:product' id=item.product.id slug=item.product.slug %}" style="color:#111">
                                     {{ item.product.title }}
                                 </a>
                             </h3>

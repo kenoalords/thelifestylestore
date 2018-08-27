@@ -41,7 +41,7 @@ class IndexView(TemplateView):
     template_name = 'generic/index.html'
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['products'] = Product.featured.all()[:6]
+        context['products'] = Product.featured.all()[:4]
         context['sliders'] = ProductSlider.active.all()
         context['brands'] = Brand.objects.all()[:4]
         return context
@@ -70,7 +70,7 @@ class CartView(TemplateView):
         # Verify the product exists
         try:
             product = Product.objects.get(pk=int(self.request.POST.get('pk')))
-            print(request.POST)
+            # print(request.POST)
             if quantity < 1 and quantity > product.quantity:
                 messages.error(request, 'You have entered an invalid quantity value for %s, please try again' % product.title)
                 if request.is_ajax():
@@ -92,7 +92,7 @@ class CartView(TemplateView):
                     product.quantity -= quantity
                     product.save()
                     if request.is_ajax():
-                        return JsonResponse({ 'status': 'success', 'message': '%s added to cart successfully' % product.title })
+                        return JsonResponse({ 'status': 'success', 'message': '%s added to cart successfully' % product.title, 'count': Item.objects.filter(cart=cart).count() })
                     else:
                         messages.success(request, '<strong>%s</strong> added to cart successfully' % product.title)
                         return HttpResponseRedirect(request.META['HTTP_REFERER'])
@@ -567,9 +567,6 @@ class PaystackPaymentGateway(View):
 
 # Confirm payment from paystack
 class PaystackPaymentConfirm(View):
-    def post(self, request, *args, **kwargs):
-        print(request.POST)
-
     def get(self, request):
         try:
             ref = request.GET['reference']
@@ -610,7 +607,8 @@ class PaystackPaymentConfirm(View):
                 else:
                     return redirect(reverse('microstore:orderfailed', kwargs={ 'order': str(order.uuid), 'status':'failed' }))
         except Exception as ex:
-            print(ex)
+            messages.error(request, 'There was a problem with your payment. Kindly contact us before trying again!')
+            return HttpResponseRedirect(reverse('microstore:pay'))
 
 # Payment confirmation and thank you page
 class PaymentConfirmation(DetailView):
