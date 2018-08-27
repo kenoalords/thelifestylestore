@@ -11,9 +11,11 @@
     <div class="hero-body">
         <div class="container">
             <!-- <h1 class="title is-3 has-text-centered">Products</h1> -->
-            {% for product in products %}
-                {% include '../parts/products/product.html' with product=product %}
-            {% endfor %}
+            <div class="columns is-multiline">
+                {% for product in products %}
+                    {% include '../parts/products/product.html' with product=product %}
+                {% endfor %}
+            </div>
         </div>
     </div>
 </div>
