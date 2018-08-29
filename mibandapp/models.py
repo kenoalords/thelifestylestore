@@ -154,6 +154,7 @@ class Item(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.SmallIntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
+    is_paid = models.BooleanField(default=False)
 
     def total(self):
         return self.product.sale_price * self.quantity

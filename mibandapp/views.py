@@ -26,7 +26,7 @@ from django.core.mail import EmailMessage, EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.contrib.sites.shortcuts import get_current_site
-from mibandapp.tasks import send_create_account_email, send_order_email, send_payment_recieved_email, send_create_account_email_checkout, send_push_notification
+from mibandapp.tasks import send_create_account_email, send_order_email, send_payment_recieved_email, send_create_account_email_checkout, send_push_notification, notify_admin_incomplete_payment
 import decimal
 from django.core import serializers
 from pywebpush import webpush
@@ -79,7 +79,7 @@ class CartView(TemplateView):
                     return HttpResponseRedirect(request.META['HTTP_REFERER'])
             try:
                 cart, created = Cart.objects.get_or_create(cart_id=cart_id)
-                if product.quantity - quantity  > 0:
+                if product.quantity - quantity  >= 0:
                     try:
                         item = Item.objects.get(cart=cart, product=product)
                         if item:
@@ -98,9 +98,9 @@ class CartView(TemplateView):
                         return HttpResponseRedirect(request.META['HTTP_REFERER'])
                 else:
                     if request.is_ajax():
-                        return JsonResponse({ 'status': 'failed', 'message': 'Oops! %s is out of stock' % product.title })
+                        return JsonResponse({ 'status': 'failed', 'message': 'Sorry! we only have %s %s in stock' % (product.quantity, product.title) })
                     else:
-                        messages.success(request, 'Oops! <strong>%s</strong> is out of stock' % product.title)
+                        messages.success(request, 'Sorry! we only have %s %s in stock' % (product.quantity, product.title) )
                         return HttpResponseRedirect(request.META['HTTP_REFERER'])
             except Exception as ex:
                 print(ex)
@@ -582,6 +582,11 @@ class PaystackPaymentConfirm(View):
                 order = Order.objects.get(transaction_reference=data['reference'])
                 order.is_paid = True
                 order.save()
+
+                for item in  Item.objects.filter(cart=order.cart):
+                    item.is_paid = True
+                    item.save()
+
                 if res['status'] == True:
                     amount = data['amount'] / 100
                     payment = Payment(
@@ -603,6 +608,7 @@ class PaystackPaymentConfirm(View):
                     if amount == order.total:
                         return redirect(reverse('microstore:thankyou', kwargs={ 'order': str(order.uuid), 'status':'complete' }))
                     else:
+                        notify_admin_incomplete_payment.delay(order.id, self.request.user.id)
                         return redirect(reverse('microstore:thankyou', kwargs={ 'order': str(order.uuid), 'status':'incomplete' } ))
                 else:
                     return redirect(reverse('microstore:orderfailed', kwargs={ 'order': str(order.uuid), 'status':'failed' }))

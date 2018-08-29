@@ -56,8 +56,7 @@
                                 </tr>
                                 <tr><td colspan="2"></td></tr>
                                 <tr style="border-top: 3px solid #eee;">
-                                    <td></td>
-                                    <td style="padding-top:1em;">
+                                    <td style="padding-top:1em;" colspan="2">
                                         {% csrf_token %}
                                         <input type="hidden" name="order_id" value="{{ order.uuid }}">
                                         <button type="submit" class="button is-medium is-primary is-fullwidth"><span>Pay now</span></button>

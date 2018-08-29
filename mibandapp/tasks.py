@@ -4,6 +4,7 @@ from django.core.mail import EmailMessage, EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.contrib.sites.shortcuts import get_current_site
+from django.contrib.auth.models import User
 from mibandapp.models import Order, Item, Cart, Payment, PushNotification
 from pywebpush import webpush, WebPushException, WebPusher
 from django.core import serializers
@@ -43,6 +44,16 @@ def send_payment_recieved_email(name, email, cart, total, order, payment):
     items = Item.objects.filter(cart=cart_id)
     email_body = render_to_string('email/payment_recieved_email.html', context={'order': order, 'items': items, 'payment': payment})
     email = EmailMultiAlternatives(to=[email], subject='Payment recieved on order: %s' % order.id, body=strip_tags(email_body))
+    email.attach_alternative(email_body, 'text/html')
+    email.send()
+
+@shared_task
+def notify_admin_incomplete_payment(order_id, user):
+    order = Order.objects.get(pk=order_id)
+    user = User.objects.get(id=user)
+    payment = Payment.objects.get(order=order)
+    email_body = render_to_string('email/incomplete_payment_recieved_email.html', context={'order': order, 'user': user, 'payment': payment })
+    email = EmailMultiAlternatives(to=['hello@thelifestylestore.com.ng', 'kenoalords@gmail.com'], subject="ALERT: Incomplete Payment Recieved!", body=strip_tags(email_body))
     email.attach_alternative(email_body, 'text/html')
     email.send()
 

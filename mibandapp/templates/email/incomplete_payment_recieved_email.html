@@ -1,0 +1,19 @@
+{% extends './email_base.html' %}
+
+{% load humanize %}
+{% block content %}
+
+{% load i18n currency humanize %}{% autoescape off %}
+<h4>Incomplete payment alert was triggered on ORDER NO: {{ order.id }}</h4>
+<p>{% blocktrans %}Please review the order and notify the user{% endblocktrans %}</p>
+<p>Total Amount: {{ order.total|intcomma }}</p>
+<p>Shipping Cost: {{ order.shipping_cost|intcomma }}</p>
+<hr>
+<p>Amount Paid: {{ payment.amount|intcomma }}</p>
+<p>User Email: <a href="mailto:{{ user.email }}">{{ user.email }}</a></p>
+
+<h5>Thank you</h5>
+
+{% endautoescape %}
+
+{% endblock content %}
