@@ -231,6 +231,9 @@ class PaymentView(TemplateView):
         try:
             self.order = Order.objects.get(uuid__exact=kwargs['order'])
             items = Item.objects.filter(cart=self.order.cart)
+            if items is None:
+                self.order.delete()
+                return HttpResponseRedirect(reverse('microstore:all_products'))
             total = sum( [item.product.sale_price * item.quantity for item in items] )
             total += self.order.shipping_cost
             return render(request, self.template_name, { 'order': self.order, 'total': total, 'items': items, 'shipping_cost': self.order.shipping_cost })
