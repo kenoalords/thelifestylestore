@@ -2,7 +2,7 @@ import uuid
 from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import User
-from datetime import datetime
+from datetime import datetime, date
 from django.utils import timezone
 from mibandapp.managers import ActiveProducts, ActiveProductSliders, FeaturedProduct
 
@@ -159,6 +159,9 @@ class Item(models.Model):
     def total(self):
         return self.product.sale_price * self.quantity
 
+    def __str__(self):
+        return '%s (QTY: %s)' % (self.product, self.quantity)
+
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
@@ -213,6 +216,9 @@ class Payment(models.Model):
     customer_id = models.IntegerField()
     transaction_date = models.DateTimeField(default=timezone.now)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return '#%s - %s' % (self.amount, datetime.date(self.transaction_date))
 
 
 class ShippingAddress(models.Model):
