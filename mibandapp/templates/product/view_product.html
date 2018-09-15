@@ -6,7 +6,8 @@
 
 {% block content %}
 {% load humanize currency %}
-<div class="hero is-medium product-view">
+
+<div class="hero is-medium product-view" data-id="{{ product.title }}">
     <div class="hero-body">
         <div class="container single-product" itemscope itemtype="http://schema.org/Product">
             {% include "../parts/notification/message.html" %}

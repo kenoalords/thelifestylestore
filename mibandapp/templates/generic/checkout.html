@@ -2,6 +2,9 @@
 
 {% block content %}
 {% load humanize currency %}
+<script>
+  fbq('track', 'InitiateCheckout');
+</script>
 <form action="{% url 'microstore:checkout' %}" method="post" novalidate id="checkout-form">
 {% csrf_token %}
 <div class="hero is-medium">

@@ -1,4 +1,4 @@
-let CACHE_STATIC = 'static-v6.2';
+let CACHE_STATIC = 'static-v6.4';
 let CACHE_DYNAMIC = 'dynamic-v2';
 
 self.addEventListener('install', (event) => {
@@ -45,14 +45,6 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-    // console.log(event)
-    // if ( event.request.url.match(/\.(jpeg|jpg|gif|png|css|js|svg|woff|woff2)$/) ){
-    //
-    // } else {
-    //     event.respondWith(
-    //
-    //     )
-    // }
     event.respondWith(
         caches.match(event.request).then( function(response){
             if ( response ) {
