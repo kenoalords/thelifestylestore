@@ -1,4 +1,4 @@
-let CACHE_STATIC = 'static-v6.1';
+let CACHE_STATIC = 'static-v6.2';
 let CACHE_DYNAMIC = 'dynamic-v2';
 
 self.addEventListener('install', (event) => {
@@ -34,7 +34,7 @@ self.addEventListener('activate', (event) => {
         caches.keys().then( (keyList) => {
             return Promise.all(
                 keyList.map( function(key) {
-                    if( key !== CACHE_STATIC && key !== CACHE_DYNAMIC ){
+                    if( key !== CACHE_STATIC ){
                         return caches.delete(key);
                     }
                 })

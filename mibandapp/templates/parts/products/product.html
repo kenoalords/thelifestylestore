@@ -27,6 +27,7 @@
             <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
                 <meta itemprop="priceCurrency" content="NGN">
                 <h4 class="title sale_price" itemprop="price" content="{{ product.sale_price }}">{{ product.sale_price|intcomma|currency }}</h4>
+                <a href="{% url 'microstore:product' id=product.id slug=product.slug %}" class="button is-primary">Buy now</a>
             </div>
         </div>
     </div>
