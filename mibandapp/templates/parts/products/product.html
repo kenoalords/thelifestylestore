@@ -14,7 +14,7 @@
         </figure>
         <div class="details">
             {% include './ratings.html' with product=product %}
-            <h2 class="title is-4">
+            <h2 class="title is-5">
                 <a href="{% url 'microstore:product' id=product.id slug=product.slug %}">
                     <span itemprop="name">{{ product.title }}</span>
                 </a>
@@ -27,7 +27,6 @@
             <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
                 <meta itemprop="priceCurrency" content="NGN">
                 <h4 class="title sale_price" itemprop="price" content="{{ product.sale_price }}">{{ product.sale_price|intcomma|currency }}</h4>
-                <a href="{% url 'microstore:product' id=product.id slug=product.slug %}" class="button is-primary">Buy now</a>
             </div>
         </div>
     </div>
