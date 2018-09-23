@@ -39,7 +39,7 @@
                             </div>
                         {% endif %}
                         <meta itemprop="priceCurrency" content="NGN">
-                        <h4 class="title sale_price" itemprop="price" content="{{ product.sale_price }}">{{ product.sale_price|intcomma|currency }}</h4>
+                        <h4 class="title sale_price" itemprop="price" content="{{ product.sale_price }}" data-price="{{ product.sale_price }}">{{ product.sale_price|intcomma|currency }}</h4>
                     </p>
                     <p></p>
                     <!-- Add to cart form -->
@@ -112,6 +112,10 @@
     </div>
 </div>
 <script>
-  fbq('track', 'ViewContent');
+    var price = document.querySelector('.sale_price').dataset.price;
+    fbq('track', 'ViewContent', {
+        value: price,
+        currency: 'NGN',
+    });
 </script>
 {% endblock content %}
