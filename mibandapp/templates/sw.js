@@ -1,5 +1,5 @@
-let CACHE_STATIC = 'static-v6.4';
-let CACHE_DYNAMIC = 'dynamic-v2';
+let CACHE_STATIC = 'static-v6.5';
+let CACHE_DYNAMIC = 'dynamic-v2.1';
 
 self.addEventListener('install', (event) => {
     event.waitUntil(
